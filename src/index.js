@@ -1,4 +1,5 @@
 import projects from './modules/projects';
+import projectComponent from './components/projectComponent';
 import './normalize.css';
 import './style.css';
 
@@ -9,4 +10,6 @@ const testInfo1 = {
 	priority: 1,
 };
 
-window.projects = projects;
+const projectContainer = document.querySelector('#projectContainer');
+
+projectContainer.append(projectComponent('Test'));
