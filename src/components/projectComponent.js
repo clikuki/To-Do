@@ -5,12 +5,17 @@ import add from '../assets/add_48x48.png';
 
 const headerComponent = (() =>
 {
-	const toggleTodo = (projectElem) => projectElem.classList.toggle('active');
+	const toggleTodo = (projectElem, addTodoBtn, clickedElem) =>
+	{
+		if(clickedElem === addTodoBtn) return;
+		projectElem.classList.toggle('active');
+	}
 
 	return (name, projectElem) =>
 	{
 		const mainComponent = component('div', {
 			props: {
+				onclick: (e) => toggleTodo(projectElem, addTodoBtn, e.target),
 				class: [
 					'projectHeader',
 					'heading',
@@ -23,7 +28,6 @@ const headerComponent = (() =>
 				class: [
 					'projectName',
 				],
-				onclick: () => toggleTodo(projectElem),
 			},
 			children: [
 				name

@@ -255,20 +255,25 @@ footer
 	border-left-color: green;
 }
 
-.todoItem > .todoName
+.todoItem > .name
 {
 	margin: 0;
 }
 
-.todoItem > .todoDate::before
+.todoItem > .status::before
+{
+	content: 'Status: ';
+	font-weight: bold;
+}
+
+.todoItem > .date::before
 {
 	content: 'Deadline - ';
 }
 
 .todoItem.completed
 {
-	text-decoration: line-through;
-	text-decoration-thickness: 2px;
+	opacity: .5;
 }
 
 /* || Utilities */
@@ -330,24 +335,3 @@ button:hover
 {
 	background-color: #c3c3c3;
 }
-
-/* || Media Queries */
-
-/* @media screen and (max-width: 576px) {
-	.inputContainer
-	{
-		width: 420px;
-	}
-}
-@media screen and (max-width: 425px) {
-	.inputContainer
-	{
-		width: 350px;
-	}
-}
-@media screen and (max-width: 360px) {
-	.inputContainer
-	{
-		width: 260px;
-	}
-} */
