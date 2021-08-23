@@ -1,21 +1,36 @@
 import component from '../modules/component';
+import todoComponent from './todoComponent';
 import getUniqueKey from '../modules/getUniqueKey';
 import arrow from '../assets/arrow.svg';
 import add from '../assets/add_48x48.png';
 
 const headerComponent = (() =>
 {
-	const toggleTodo = (projectElem, addTodoBtn, clickedElem) =>
+	const toggleTodoList = (projectElem, addTodoBtn, clickedElem) =>
 	{
 		if(clickedElem === addTodoBtn) return;
 		projectElem.classList.toggle('active');
 	}
 
-	return (name, projectElem) =>
+	const addTodos = (projectElem, todosContainer) =>
+	{
+		const todoElem = todoComponent(testInfo);
+		todosContainer.append(todoElem);
+		projectElem.classList.remove('empty')
+	}
+
+	const testInfo = {
+		title: 'test title',
+		description: 'A descriptive description',
+		dueDate: '08/07/21',
+		priority: 1,
+	};
+
+	return (name, projectElem, todosContainer) =>
 	{
 		const mainComponent = component('div', {
 			props: {
-				onclick: (e) => toggleTodo(projectElem, addTodoBtn, e.target),
+				onclick: (e) => toggleTodoList(projectElem, addTodoBtn, e.target),
 				class: [
 					'projectHeader',
 					'heading',
@@ -46,7 +61,8 @@ const headerComponent = (() =>
 
 		const addTodoBtn = component('img', {
 			props: {
-				src: add
+				src: add,
+				onclick: () => addTodos(projectElem ,todosContainer),
 			},
 		})
 
@@ -62,13 +78,11 @@ const projectComponent = (name) =>
 			class: [
 				'project',
 				'active',
-				// 'empty',
+				'empty',
 			],
 			'data-key': getUniqueKey(),
 		}
 	})
-
-	const header = headerComponent(name, mainComponent);
 
 	const todosContainer = component('div', {
 		props: {
@@ -77,6 +91,8 @@ const projectComponent = (name) =>
 			],
 		}
 	});
+
+	const header = headerComponent(name, mainComponent, todosContainer);
 
 	mainComponent.append(header, todosContainer);
 	return mainComponent;
