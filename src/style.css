@@ -161,17 +161,17 @@ footer
 	--main-transition: all .1s ease-in;
 }
 
+.project img
+{
+	width: 30px;
+	height: 30px;
+}
+
 .projectHeader
 {
 	display: flex;
 	user-select: none;
 	padding: 5px;
-}
-
-.projectHeader > img
-{
-	width: 30px;
-	height: 30px;
 }
 
 .project .arrow
@@ -229,6 +229,7 @@ footer
 
 .todoItem:hover
 {
+	cursor: pointer;
 	transition: all .1s ease-in;
 	transform: scale(1.003);
 	box-shadow: 3px 3px 5px 2px rgba(0, 0, 0, 0.2);
@@ -296,12 +297,12 @@ img
 
 img:not(.noGray)
 {
-	background-color: #dedede;
+	background-color: #0000001a;
 }
 
 img:hover:not(.noGray)
 {
-	background-color: #c3c3c3;
+	background-color: #00000033;
 }
 
 a
