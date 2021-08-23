@@ -1,6 +1,6 @@
 import projects from './modules/projects';
+import component from './modules/component';
 import projectComponent from './components/projectComponent';
-import todoComponent from './components/todoComponent';
 import './normalize.css';
 import './style.css';
 

@@ -3,10 +3,10 @@
  * @param {String} tag - The tag of the element
  * @param {Object} options - Options for the element
  * @param {Object} options.props - Properties of the element
- * @param {Array} options.children - An array of nodes
+ * @param {Array<HTMLElement>} options.children - An array of nodes
  * @returns {HTMLElement} Returns a node with the specifed tag
  */
-export default (tag, { props = {}, children = [] }) =>
+export default (tag, { props = {}, children = [] } = {}) =>
 {
 	const element = document.createElement(tag);
 

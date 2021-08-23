@@ -1,5 +1,7 @@
 import component from '../modules/component';
 import todoComponent from './todoComponent';
+import inputComponent from './inputComponent';
+import modal from '../modules/modal';
 import getUniqueKey from '../modules/getUniqueKey';
 import arrow from '../assets/arrow.svg';
 import add from '../assets/add_48x48.png';
@@ -8,16 +10,107 @@ const headerComponent = (() =>
 {
 	const toggleTodoList = (projectElem, addTodoBtn, clickedElem) =>
 	{
-		if(clickedElem === addTodoBtn) return;
+		if (clickedElem === addTodoBtn) return;
 		projectElem.classList.toggle('active');
 	}
 
-	const addTodos = (projectElem, todosContainer) =>
+	const addTodos = (() =>
 	{
-		const todoElem = todoComponent(testInfo);
-		todosContainer.append(todoElem);
-		projectElem.classList.remove('empty')
-	}
+		const addProject = (projectElem, todosContainer, todoInfo) =>
+		{
+			modal.hide();
+			const todoElem = todoComponent(todoInfo);
+			todosContainer.append(todoElem);
+			projectElem.classList.remove('empty');
+		}
+
+		const submitFunc = (projectElem, todosContainer, todoInfo) =>
+		{
+			// TODO: Add checks for todoInfo
+			console.log(todoInfo);
+
+			addProject(projectElem, todosContainer, todoInfo);
+		}
+
+		const getNodes = (() =>
+		{
+			const getDate = (dateObj) =>
+			{
+				const day = dateObj.getDay();
+				const month = dateObj.getMonth();
+				const year = dateObj.getYear();
+
+				return `${day}/${month}/${year}`
+			}
+
+			return (projectElem, todosContainer) =>
+			{
+				const titleInput = inputComponent({ label: 'Title' });
+				const descInput = inputComponent({ label: 'Description' });
+				const dueDateInput = component('input', {
+					props: {
+						type: 'date'
+					}
+				});
+				const priorityInput = inputComponent({ label: 'Priority' });
+
+				const getInputVals = () => ({
+					title: titleInput.val(),
+					description: descInput.val(),
+					dueDate: getDate(dueDateInput.valueAsDate),
+					priority: +priorityInput.val(),
+				})
+
+				const submitBtn = component('button', {
+					props: {
+						onclick: () => submitFunc(projectElem, todosContainer, getInputVals()),
+					},
+					children: [
+						'Create',
+					]
+				});
+
+				return [
+					component('h2', {
+						props: {
+							class: [
+								'heading',
+							],
+						},
+						children: [
+							'Create a new project'
+						]
+					}),
+					component('div', {
+						props: {
+							class: [
+								'centerDiv',
+								'verticalFlex',
+							],
+						},
+						children: [
+							titleInput.elem,
+							component('span', {
+								children: [
+									'Due Date: ',
+									dueDateInput,
+								]
+							}),
+							priorityInput.elem,
+							descInput.elem,
+							submitBtn,
+						]
+					}),
+
+				]
+			}
+		})()
+
+		return (projectElem, todosContainer) =>
+		{
+			modal.show(getNodes(projectElem, todosContainer));
+		}
+	})()
 
 	const testInfo = {
 		title: 'test title',
@@ -62,7 +155,7 @@ const headerComponent = (() =>
 		const addTodoBtn = component('img', {
 			props: {
 				src: add,
-				onclick: () => addTodos(projectElem ,todosContainer),
+				onclick: () => addTodos(projectElem, todosContainer),
 			},
 		})
 

@@ -3,23 +3,32 @@ import component from "../modules/component";
 const inputComponentMaker = ({ label, maxlength = 25 }) =>
 {
 	const mainComponent = component('div', {
-		class: [
-			'inputContainer'
-		],
+		props: {
+			class: [
+				'inputContainer'
+			],
+		}
 	})
 
 	const inputEl = component('input', {
-		maxlength: maxlength,
-		type: 'text',
-		autocomplete: 'off',
-		spellcheck: false,
+		props: {
+			maxlength: maxlength,
+			type: 'text',
+			autocomplete: 'off',
+			spellcheck: false,
+		}
 	})
 
 	const labelElem = component('div', {
-		class: [
-			'placeholder'
+		props: {
+			class: [
+				'placeholder'
+			]
+		},
+		children: [
+			label
 		]
-	}, [ label ])
+	})
 
 	labelElem.addEventListener('click', () =>
 	{

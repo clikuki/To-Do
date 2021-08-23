@@ -26,35 +26,51 @@ const modal = (() =>
 		modalContent.append(...nodes);
 	}
 
-	const modalContent = component('div');
-
+	/**
+	 * Hides the modal box
+	 */
 	const hide = () => modalState('add');
+
+	/**
+	 * Reveals the modal box
+	 * @param {Array<HTMLElement>} nodes 
+	 */
 	const show = nodes =>
 	{
 		fillModal(nodes);
 		modalState('remove');
 	}
 
+	const modalContent = component('div');
+
 	const modalCloseBtn = component('button', {
-		id: 'modalCloseBtn',
-		onclick: hide,
+		props: {
+			id: 'modalCloseBtn',
+			onclick: hide,
+		},
 	})
 	
 	const modalBox = component('div', {
-		id: 'modal',
-	}, [
-		modalCloseBtn,
-		modalContent,
-	]);
+		props: {
+			id: 'modal',
+		},
+		children: [
+			modalCloseBtn,
+			modalContent,
+		]
+	});
 
 	const modalBg = component('div', {
-		id: 'modalBg',
-		class: [
-			'invis'
+		props: {
+			id: 'modalBg',
+			class: [
+				'invis'
+			]
+		},
+		children: [
+			modalBox
 		]
-	}, [
-		modalBox
-	]);
+	});
 
 	bodyElem.append(modalBg);
 

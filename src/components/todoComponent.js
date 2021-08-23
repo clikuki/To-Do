@@ -15,11 +15,11 @@ const todoComponent = (() =>
 	}
 
 	/**
-	 * @param {Object} todoInfo - Info of the todo item
-	 * @param {String} todoInfo.title - Title of the todo item
-	 * @param {String} todoInfo.description - Description of the todo item
-	 * @param {String} todoInfo.dueDate - Deadline of todo item
-	 * @param {Number} todoInfo. priority - The priority of the todo item
+	 * @param {Object} todoInfo
+	 * @param {String} todoInfo.title
+	 * @param {String} todoInfo.description
+	 * @param {String} todoInfo.dueDate
+	 * @param {Number} todoInfo. priority
 	 * @returns {HTMLElement} Returns a todo component
 	 */
 	return (todoInfo) =>
