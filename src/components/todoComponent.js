@@ -20,7 +20,7 @@ const todoComponent = (todoInfo) =>
 		}
 	})
 
-	const todoName = component('h3', {
+	const name = component('h3', {
 		children: [
 			todoInfo.title
 		],
@@ -31,7 +31,18 @@ const todoComponent = (todoInfo) =>
 		}
 	})
 
-	mainComponent.append(todoName);
+	const date = component('span', {
+		children: [
+			todoInfo.dueDate
+		],
+		props: {
+			class: [
+				'todoDate'
+			]
+		}
+	})
+
+	mainComponent.append( name, date );
 	return mainComponent;
 }
 

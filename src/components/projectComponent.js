@@ -57,6 +57,7 @@ const projectComponent = (name) =>
 		props: {
 			class: [
 				'project',
+				'active',
 				// 'empty',
 			],
 			'data-key': getUniqueKey(),

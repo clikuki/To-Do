@@ -13,7 +13,7 @@ const testInfo1 = {
 
 const projectContainer = document.querySelector('#projectContainer');
 
-const projectElem = projectComponent('Test');
-
-projectContainer.append(projectElem);
-projectElem.querySelector('.todos').append(todoComponent( testInfo1 ))
+const projectElem1 = projectComponent('Test');
+ 
+projectContainer.append(projectElem1);
+projectElem1.querySelector('.todos').append(todoComponent( testInfo1 ))

@@ -177,11 +177,12 @@ footer
 .project .arrow
 {
 	transition: var(--main-transition);
+	transform: rotateX(180deg);
 }
 
 .project.active .arrow
 {
-	transform: rotateX(180deg);
+	transform: rotateX(0deg);
 }
 
 .projectName 
@@ -202,7 +203,8 @@ footer
 	padding: 1rem;
 }
 
-.project.empty > .todos
+.project.empty > .todos,
+.project > .todos
 {
 	display: none;
 }
@@ -250,6 +252,11 @@ footer
 .todoItem[data-priority='3']
 {
 	border-left-color: green;
+}
+
+.todoItem > .todoName
+{
+	margin: 0;
 }
 
 .todoItem > .todoDate::before
