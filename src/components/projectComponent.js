@@ -10,34 +10,43 @@ const headerComponent = (() =>
 	return (name, projectElem) =>
 	{
 		const mainComponent = component('div', {
-			class: [
-				'projectHeader',
-				'heading',
-			]
+			props: {
+				class: [
+					'projectHeader',
+					'heading',
+				]
+			}
 		})
-	
+
 		const projectName = component('h2', {
-			class: [
-				'projectName',
-			],
-			onclick: () => toggleTodo(projectElem),
-		}, [
-			name
-		])
-	
-		const toggleTodosBtn = component('img', {
-			src: arrow,
-			class: [
-				'arrow',
-				'noGray',
+			props: {
+				class: [
+					'projectName',
+				],
+				onclick: () => toggleTodo(projectElem),
+			},
+			children: [
+				name
 			]
 		})
-	
-		const addTodoBtn = component('img', {
-			src: add,
+
+		const toggleTodosBtn = component('img', {
+			props: {
+				src: arrow,
+				class: [
+					'arrow',
+					'noGray',
+				],
+			}
 		})
-	
-		mainComponent.append( toggleTodosBtn, projectName, addTodoBtn )
+
+		const addTodoBtn = component('img', {
+			props: {
+				src: add
+			},
+		})
+
+		mainComponent.append(toggleTodosBtn, projectName, addTodoBtn)
 		return mainComponent;
 	}
 })()
@@ -45,22 +54,26 @@ const headerComponent = (() =>
 const projectComponent = (name) =>
 {
 	const mainComponent = component('div', {
-		class: [
-			'project',
-			'empty',
-		],
-		key: getUniqueKey(),
+		props: {
+			class: [
+				'project',
+				// 'empty',
+			],
+			'data-key': getUniqueKey(),
+		}
 	})
 
 	const header = headerComponent(name, mainComponent);
 
 	const todosContainer = component('div', {
-		class: [
-			'todos',
-		]
+		props: {
+			class: [
+				'todos',
+			],
+		}
 	});
 
-	mainComponent.append( header, todosContainer );
+	mainComponent.append(header, todosContainer);
 	return mainComponent;
 }
 

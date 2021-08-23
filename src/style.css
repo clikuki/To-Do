@@ -200,7 +200,6 @@ footer
 .project > .todos
 {
 	padding: 1rem;
-	display: none;
 }
 
 .project.empty > .todos
@@ -238,17 +237,17 @@ footer
 	margin-top: 0;
 }
 
-.todoItem.priorityHigh
+.todoItem[data-priority='1']
 {
 	border-left-color: red;
 }
 
-.todoItem.priorityMedium
+.todoItem[data-priority='2']
 {
 	border-left-color: yellow;
 }
 
-.todoItem.priorityLow
+.todoItem[data-priority='3']
 {
 	border-left-color: green;
 }

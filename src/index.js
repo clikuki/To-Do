@@ -1,5 +1,6 @@
 import projects from './modules/projects';
 import projectComponent from './components/projectComponent';
+import todoComponent from './components/todoComponent';
 import './normalize.css';
 import './style.css';
 
@@ -12,4 +13,7 @@ const testInfo1 = {
 
 const projectContainer = document.querySelector('#projectContainer');
 
-projectContainer.append(projectComponent('Test'));
+const projectElem = projectComponent('Test');
+
+projectContainer.append(projectElem);
+projectElem.querySelector('.todos').append(todoComponent( testInfo1 ))
