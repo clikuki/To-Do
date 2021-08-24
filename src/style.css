@@ -135,10 +135,11 @@ footer
 	top: 7px;
 	left: 5px;
 	transition: top .2s, font-size .2s;
-	color : rgba(0,0,0,0.65)
+	color: rgba(0,0,0,0.65);
+	cursor: pointer;
 }
 
-.inputContainer > input:focus + .placeholder,
+.placeholder.inputFocused,
 .placeholder.inputHasText
 {
     top: -12px;
@@ -283,6 +284,12 @@ footer
 	opacity: .5;
 }
 
+.descTextArea
+{
+	width: 50%;
+	height: 50px;
+}
+
 /* || Utilities */
 .invis
 {
@@ -304,6 +311,11 @@ footer
 .verticalFlex
 {
 	flex-direction: column;
+}
+
+.noResize
+{
+	resize: none;
 }
 
 img

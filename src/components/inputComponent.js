@@ -1,7 +1,12 @@
 import component from "../modules/component";
+import getUniqueKey from "../modules/getUniqueKey";
+
+// Code taken from/based on here: https://codepen.io/alireza82/pen/eYWaqLZ
 
 const inputComponentMaker = ({ label, maxlength = 25 }) =>
 {
+	const uniqueKey = getUniqueKey();
+
 	const mainComponent = component('div', {
 		props: {
 			class: [
@@ -16,14 +21,16 @@ const inputComponentMaker = ({ label, maxlength = 25 }) =>
 			type: 'text',
 			autocomplete: 'off',
 			spellcheck: false,
+			id: uniqueKey
 		}
 	})
 
-	const labelElem = component('div', {
+	const labelElem = component('label', {
 		props: {
 			class: [
 				'placeholder'
-			]
+			],
+			for: uniqueKey,
 		},
 		children: [
 			label
@@ -45,6 +52,9 @@ const inputComponentMaker = ({ label, maxlength = 25 }) =>
 			labelElem.classList.remove('inputHasText');
 		}
 	})
+
+	inputEl.addEventListener('focus', () => labelElem.classList.add('inputFocused'))
+	inputEl.addEventListener('blur', () => labelElem.classList.remove('inputFocused'))
 
 	mainComponent.append(inputEl, labelElem);
 	return {
