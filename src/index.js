@@ -20,9 +20,12 @@ const getNodes = () =>
 	const nameInput = inputWrapper('Project name', 'value', component('input', {
 		props: {
 			type: 'text',
+			id: 'projectNameInput',
 		}
 	}), {
-		id: 'projectNameInput',
+		class: [
+			'flexGrow'
+		]
 	})
 
 	const submitBtn = component('button', {

@@ -11,12 +11,22 @@ const inputWrapper = (labelText, valueGetterKey, inputElem, containerProps = {})
 	const id = inputElem.id || getUniqueKey();
 	inputElem.id = id;
 
+	const mainComponentClasses = [
+		'inputContainer'
+	]
+	
+	if(containerProps.class)
+	{
+		for(const className of containerProps.class)
+		{
+			mainComponentClasses.push(className);
+		}
+	}
+
 	const mainComponent = component('div', {
 		props: {
 			...containerProps,
-			class: [
-				'inputContainer'
-			],
+			class: mainComponentClasses,
 		},
 	})
 
