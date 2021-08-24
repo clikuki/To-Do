@@ -18,93 +18,75 @@ const headerComponent = (() =>
 	{
 		const addProject = (projectElem, todosContainer, todoInfo) =>
 		{
+			// Todo: add checks before adding todo item
+
 			modal.hide();
 			const todoElem = todoComponent(todoInfo);
 			todosContainer.append(todoElem);
 			projectElem.classList.remove('empty');
 		}
 
-		const submitFunc = (projectElem, todosContainer, todoInfo) =>
+		const getNodes = (projectElem, todosContainer) =>
 		{
-			// TODO: Add checks for todoInfo
-			console.log(todoInfo);
+			const titleInput = inputComponent({ label: 'Title' });
+			const descInput = inputComponent({ label: 'Description' });
+			const dueDateInput = component('input', {
+				props: {
+					type: 'date'
+				}
+			});
+			const priorityInput = inputComponent({ label: 'Priority' });
 
-			addProject(projectElem, todosContainer, todoInfo);
-		}
+			const getInputVals = () => ({
+				title: titleInput.val(),
+				description: descInput.val(),
+				dueDate: dueDateInput.valueAsDate,
+				priority: +priorityInput.val(),
+			})
 
-		const getNodes = (() =>
-		{
-			const getDate = (dateObj) =>
-			{
-				const day = dateObj.getDay();
-				const month = dateObj.getMonth();
-				const year = dateObj.getYear();
+			const submitBtn = component('button', {
+				props: {
+					onclick: () => addProject(projectElem, todosContainer, getInputVals()),
+				},
+				children: [
+					'Create',
+				]
+			});
 
-				return `${day}/${month}/${year}`
-			}
-
-			return (projectElem, todosContainer) =>
-			{
-				const titleInput = inputComponent({ label: 'Title' });
-				const descInput = inputComponent({ label: 'Description' });
-				const dueDateInput = component('input', {
+			return [
+				component('h2', {
 					props: {
-						type: 'date'
-					}
-				});
-				const priorityInput = inputComponent({ label: 'Priority' });
-
-				const getInputVals = () => ({
-					title: titleInput.val(),
-					description: descInput.val(),
-					dueDate: getDate(dueDateInput.valueAsDate),
-					priority: +priorityInput.val(),
-				})
-
-				const submitBtn = component('button', {
-					props: {
-						onclick: () => submitFunc(projectElem, todosContainer, getInputVals()),
+						class: [
+							'heading',
+						],
 					},
 					children: [
-						'Create',
+						'Create a new project'
 					]
-				});
+				}),
+				component('div', {
+					props: {
+						class: [
+							'centerDiv',
+							'verticalFlex',
+						],
+					},
+					children: [
+						titleInput.elem,
+						component('span', {
+							children: [
+								'Due Date: ',
+								dueDateInput,
+							]
+						}),
+						priorityInput.elem,
+						descInput.elem,
+						submitBtn,
+					]
+				}),
 
-				return [
-					component('h2', {
-						props: {
-							class: [
-								'heading',
-							],
-						},
-						children: [
-							'Create a new project'
-						]
-					}),
-					component('div', {
-						props: {
-							class: [
-								'centerDiv',
-								'verticalFlex',
-							],
-						},
-						children: [
-							titleInput.elem,
-							component('span', {
-								children: [
-									'Due Date: ',
-									dueDateInput,
-								]
-							}),
-							priorityInput.elem,
-							descInput.elem,
-							submitBtn,
-						]
-					}),
-
-				]
-			}
-		})()
+			]
+		}
 
 		return (projectElem, todosContainer) =>
 		{

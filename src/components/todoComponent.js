@@ -14,6 +14,15 @@ const todoComponent = (() =>
 		todoElem.classList.toggle('completed');
 	}
 
+	const getDate = (dateObj) =>
+	{
+		const day = dateObj.getDay();
+		const month = dateObj.getMonth();
+		const year = dateObj.getYear();
+
+		return `${day}/${month}/${year}`
+	}
+
 	/**
 	 * @param {Object} todoInfo
 	 * @param {String} todoInfo.title
@@ -58,7 +67,7 @@ const todoComponent = (() =>
 	
 		const date = component('span', {
 			children: [
-				todoInfo.dueDate
+				getDate(todoInfo.dueDate)
 			],
 			props: {
 				class: [
