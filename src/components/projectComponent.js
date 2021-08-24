@@ -1,8 +1,8 @@
 import component from '../modules/component';
 import todoComponent from './todoComponent';
 import inputComponent from './inputWrapper';
+import project from '../modules/projects';
 import modal from '../modules/modal';
-import getUniqueKey from '../modules/getUniqueKey';
 import arrow from '../assets/arrow.svg';
 import add from '../assets/add_48x48.png';
 
@@ -16,18 +16,31 @@ const headerComponent = (() =>
 
 	const addTodos = (() =>
 	{
-		const addTodo = (projectElem, todosContainer, todoInfo) =>
+		const addTodo = (projectElem, todosContainer, todoInfo, projKey) =>
 		{
-			// Todo: add checks before adding todo item
-			console.log(todoInfo.dueDate);
+			try
+			{
+				// Add to storage
+				const projectObj = project.get(projKey);
+				const todoKey = projectObj.todos.add(todoInfo).key;
 
-			modal.hide();
-			const todoElem = todoComponent(todoInfo);
-			todosContainer.append(todoElem);
-			projectElem.classList.remove('empty');
+				// Add to project todos
+				const todoElem = todoComponent(todoInfo, todoKey);
+				todosContainer.append(todoElem);
+				projectElem.classList.remove('empty');
+				modal.hide();
+			}
+			catch (e)
+			{
+				if(e.message === 'Invalid itemInfo: invalid or missing key/s')
+				{
+					alert('Don\'t leave the date option as null!')
+				}
+				else throw e;
+			}
 		}
 
-		const getNodes = (projectElem, todosContainer) =>
+		const getNodes = (projectElem, todosContainer, key) =>
 		{
 			const header = component('h2', {
 				props: {
@@ -98,8 +111,8 @@ const headerComponent = (() =>
 						title: titleInput.val(),
 						description: descInput.val(),
 						dueDate: dateInput.val(),
-						priority: priorityInput.val(),
-					}),
+						priority: +priorityInput.val(),
+					}, key),
 				},
 				children: [
 					'Create',
@@ -152,13 +165,13 @@ const headerComponent = (() =>
 			]
 		}
 
-		return (projectElem, todosContainer) =>
+		return (projectElem, todosContainer, key) =>
 		{
-			modal.show(getNodes(projectElem, todosContainer));
+			modal.show(getNodes(projectElem, todosContainer, key));
 		}
 	})()
 
-	return (name, projectElem, todosContainer) =>
+	return (name, projectElem, key, todosContainer) =>
 	{
 		const mainComponent = component('div', {
 			props: {
@@ -194,7 +207,7 @@ const headerComponent = (() =>
 		const addTodoBtn = component('img', {
 			props: {
 				src: add,
-				onclick: () => addTodos(projectElem, todosContainer),
+				onclick: () => addTodos(projectElem, todosContainer, key),
 			},
 		})
 
@@ -203,7 +216,7 @@ const headerComponent = (() =>
 	}
 })()
 
-const projectComponent = (name) =>
+const projectComponent = (name, key) =>
 {
 	const mainComponent = component('div', {
 		props: {
@@ -212,7 +225,7 @@ const projectComponent = (name) =>
 				'active',
 				'empty',
 			],
-			'data-key': getUniqueKey(),
+			'data-key': key,
 		}
 	})
 
@@ -224,7 +237,7 @@ const projectComponent = (name) =>
 		}
 	});
 
-	const header = headerComponent(name, mainComponent, todosContainer);
+	const header = headerComponent(name, mainComponent, key, todosContainer);
 
 	mainComponent.append(header, todosContainer);
 	return mainComponent;

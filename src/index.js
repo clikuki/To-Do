@@ -1,4 +1,4 @@
-import projects from './modules/projects';
+import project from './modules/projects';
 import projectComponent from './components/projectComponent';
 import component from './modules/component';
 import modal from './modules/modal';
@@ -10,9 +10,24 @@ const projectContainer = document.querySelector('#projectContainer');
 
 const addProject = (name) =>
 {
-	modal.hide();
-	const projectElem = projectComponent(name);
-	projectContainer.append(projectElem);
+	try
+	{
+		// Add to storage
+		const projectKey = project.add(name).key;
+	
+		// Append element to projectContainer
+		const projectElem = projectComponent(name, projectKey);
+		projectContainer.append(projectElem);
+		modal.hide();
+	}
+	catch (e)
+	{
+		if(e.message === 'Invalid name: must not be an empty string')
+		{
+			alert('Project name must not be an empty string!')
+		}
+		else throw e;
+	}
 }
 
 const getNodes = () =>
@@ -63,6 +78,8 @@ const getNodes = () =>
 		}),
 	]
 }
+
+window.projects = project;
 
 const addProjectBtn = document.querySelector('#addProject');
 addProjectBtn.addEventListener('click', () => modal.show(getNodes()))

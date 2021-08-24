@@ -40,23 +40,36 @@ const todoMethods = (() =>
 	{
 		const keyCheck = (() =>
 		{
-			const reqKeys = [
-				'title', 'description', 'dueDate', 'priority',
-			]
+			const reqKeys = {
+				title: String,
+				description: String,
+				dueDate: Date, 
+				priority: Number,
+			}
 
 			return todoInfo =>
 			{
-				let numOfKeys = 0;
-	
-				for (const key in todoInfo)
+				try
 				{
-					if(reqKeys.includes(key)) ++numOfKeys;
-					else return false;
+					let numOfKeys = 0;
+		
+					for (const [key, val] of Object.entries(todoInfo))
+					{
+						const validKey = Object.keys(reqKeys).includes(key);
+						const correctType = val.constructor === reqKeys[key];
+	
+						if(validKey && correctType) ++numOfKeys;
+						else return false;
+					}
+		
+					if(numOfKeys !== Object.keys(reqKeys).length) return false;
+		
+					return true;
 				}
-	
-				if(numOfKeys !== reqKeys.length) return false;
-	
-				return true;
+				catch (e)
+				{
+					return false;
+				}
 			}
 		})()
 
@@ -72,11 +85,14 @@ const todoMethods = (() =>
 				throw new Error('Invalid itemInfo: invalid or missing key/s');
 			}
 
-			todoList.push({
+			const todoObj = {
 				key: getUniqueKey(),
 				completed: false,
 				...todoInfo,
-			});
+			};
+
+			todoList.push(todoObj);
+			return todoObj;
 		}
 	})()
 
@@ -136,9 +152,10 @@ const projectMethods = (() =>
 		}
 	})();
 
-	const add = (projectName) =>
+	const add = (projectName = undefined) =>
 	{
-		if (typeof projectName !== 'string') return;
+		if (typeof projectName !== 'string') throw new TypeError('Invalid name: must be a string');
+		if (projectName === '') throw new Error('Invalid name: must not be an empty string');
 
 		const todoList = [];
 		const project = {

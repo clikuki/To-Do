@@ -14,7 +14,7 @@ const todoComponent = (() =>
 		todoElem.classList.toggle('completed');
 	}
 	
-	const getDate = (dateObj) =>
+	const parseDate = (dateObj) =>
 	{
 		const day = dateObj.getDate();
 		const month = dateObj.getMonth() + 1;
@@ -31,7 +31,7 @@ const todoComponent = (() =>
 	 * @param {Number} todoInfo. priority
 	 * @returns {HTMLElement} Returns a todo component
 	 */
-	return (todoInfo) =>
+	return (todoInfo, key) =>
 	{
 		const mainComponent = component('div', {
 			props: {
@@ -40,6 +40,7 @@ const todoComponent = (() =>
 				],
 				onclick: (e) => toggleTodoState(mainComponent, status, editBtn, e.target),
 				'data-priority': todoInfo.priority,
+				'data-key': key,
 			}
 		})
 	
@@ -67,7 +68,7 @@ const todoComponent = (() =>
 	
 		const date = component('span', {
 			children: [
-				getDate(todoInfo.dueDate)
+				parseDate(todoInfo.dueDate)
 			],
 			props: {
 				class: [
