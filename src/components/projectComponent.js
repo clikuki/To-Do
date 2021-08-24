@@ -1,6 +1,6 @@
 import component from '../modules/component';
 import todoComponent from './todoComponent';
-import inputComponent from './inputComponent';
+import inputComponent from './inputWrapper';
 import modal from '../modules/modal';
 import getUniqueKey from '../modules/getUniqueKey';
 import arrow from '../assets/arrow.svg';
@@ -19,8 +19,7 @@ const headerComponent = (() =>
 		const addProject = (projectElem, todosContainer, todoInfo) =>
 		{
 			// Todo: add checks before adding todo item
-			console.log(todoInfo);
-			window.info = todoInfo;
+			console.log(todoInfo.dueDate);
 
 			modal.hide();
 			const todoElem = todoComponent(todoInfo);
@@ -37,73 +36,59 @@ const headerComponent = (() =>
 					],
 				},
 				children: [
-					'Create a new project'
+					'Create a new todo'
 				]
 			})
 
-			const titleInput = inputComponent('Title', 'input', 'value');
+			const titleInput = inputComponent('Title', 'value', component('input', {
+				props: {
+					maxlength: 25,
+				}
+			}));
 
-			const descInput = inputComponent('Description', 'textarea', 'value', {
-				class: [
-					'descTextArea',
-					'noResize'
-				]
-			})
-
-			const dateInput = inputComponent('Due Date', 'input', 'valueAsDate', {
-				type: 'date'
-			})
-
-			const priorityInput = component('select', {
-						props: {
-							id: 'priority',
-						},
-						children: [
-							component('option', {
-								props: {
-									value: 1,
-								},
-								children: [
-									'High'
-								]
-							}),
-							component('option', {
-								props: {
-									value: 2,
-								},
-								children: [
-									'Medium'
-								]
-							}),
-							component('option', {
-								props: {
-									value: 3,
-								},
-								children: [
-									'Low'
-								]
-							}),
-						]
-					}) 
-
-			const priorityInputContainer = component('div', {
+			const descInput = inputComponent('Description', 'value', component('textarea', {
 				props: {
 					class: [
-						'inputContainer'
+						'descTextArea',
+						'noResize'
 					]
 				},
+			}))
+
+			const dateInput = inputComponent('Due Date', 'valueAsDate', component('input', {
+				props: {
+					type: 'date'
+				},
+			}))
+
+			const priorityInput = inputComponent('Priority', 'value', component('select', {
 				children: [
-					component('label', {
+					component('option', {
 						props: {
-							for: 'priority',
+							value: 1,
 						},
 						children: [
-							'Priority:',
-						],
+							'High'
+						]
 					}),
-					priorityInput,
+					component('option', {
+						props: {
+							value: 2,
+						},
+						children: [
+							'Medium'
+						]
+					}),
+					component('option', {
+						props: {
+							value: 3,
+						},
+						children: [
+							'Low'
+						]
+					}),
 				]
-			})
+			}) )
 			
 			const submitBtn = component('button', {
 				props: {
@@ -112,7 +97,7 @@ const headerComponent = (() =>
 						title: titleInput.val(),
 						description: descInput.val(),
 						dueDate: dateInput.val(),
-						priority: priorityInput.value,
+						priority: priorityInput.val(),
 					}),
 				},
 				children: [
@@ -143,7 +128,7 @@ const headerComponent = (() =>
 				},
 				children: [
 					dateInput.elem,
-					priorityInputContainer,
+					priorityInput.elem,
 					submitBtn,
 				]
 			})
