@@ -13,12 +13,12 @@ const todoComponent = (() =>
 		else statusDisplayElem.textContent = 'Complete';
 		todoElem.classList.toggle('completed');
 	}
-
+	
 	const getDate = (dateObj) =>
 	{
-		const day = dateObj.getDay();
-		const month = dateObj.getMonth();
-		const year = dateObj.getYear();
+		const day = dateObj.getDate();
+		const month = dateObj.getMonth() + 1;
+		const year = dateObj.getFullYear();
 
 		return `${day}/${month}/${year}`
 	}

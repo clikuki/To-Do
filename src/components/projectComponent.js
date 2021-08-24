@@ -19,6 +19,8 @@ const headerComponent = (() =>
 		const addProject = (projectElem, todosContainer, todoInfo) =>
 		{
 			// Todo: add checks before adding todo item
+			console.log(todoInfo);
+			window.info = todoInfo;
 
 			modal.hide();
 			const todoElem = todoComponent(todoInfo);
@@ -39,35 +41,20 @@ const headerComponent = (() =>
 				]
 			})
 
-			const titleInput = inputComponent('Title', 'input');
+			const titleInput = inputComponent('Title', 'input', 'value');
 
-			const descInput = inputComponent('Description', 'textarea', {
+			const descInput = inputComponent('Description', 'textarea', 'value', {
 				class: [
 					'descTextArea',
 					'noResize'
 				]
 			})
 
-			const dateInput = inputComponent('Due Date', 'input', {
+			const dateInput = inputComponent('Due Date', 'input', 'valueAsDate', {
 				type: 'date'
 			})
 
-			const priorityInput = component('div', {
-				props: {
-					class: [
-						'inputContainer'
-					]
-				},
-				children: [
-					component('label', {
-						props: {
-							for: 'priority',
-						},
-						children: [
-							'Priority:',
-						],
-					}),
-					component('select', {
+			const priorityInput = component('select', {
 						props: {
 							id: 'priority',
 						},
@@ -97,14 +84,36 @@ const headerComponent = (() =>
 								]
 							}),
 						]
-					})
+					}) 
+
+			const priorityInputContainer = component('div', {
+				props: {
+					class: [
+						'inputContainer'
+					]
+				},
+				children: [
+					component('label', {
+						props: {
+							for: 'priority',
+						},
+						children: [
+							'Priority:',
+						],
+					}),
+					priorityInput,
 				]
 			})
 			
 			const submitBtn = component('button', {
 				props: {
 					id: 'submitBtn',
-					onclick: () => addProject(projectElem, todosContainer, getInputVals()),
+					onclick: () => addProject(projectElem, todosContainer, {
+						title: titleInput.val(),
+						description: descInput.val(),
+						dueDate: dateInput.val(),
+						priority: priorityInput.value,
+					}),
 				},
 				children: [
 					'Create',
@@ -134,7 +143,7 @@ const headerComponent = (() =>
 				},
 				children: [
 					dateInput.elem,
-					priorityInput,
+					priorityInputContainer,
 					submitBtn,
 				]
 			})

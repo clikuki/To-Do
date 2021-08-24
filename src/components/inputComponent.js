@@ -1,7 +1,7 @@
 import component from "../modules/component";
 import getUniqueKey from "../modules/getUniqueKey";
 
-const inputComponentMaker = (label, tag, options = {}) =>
+const inputComponentMaker = (label, tag, valueName, options = {}) =>
 {
 	const uniqueKey = getUniqueKey();
 
@@ -34,7 +34,7 @@ const inputComponentMaker = (label, tag, options = {}) =>
 	mainComponent.append(labelElem, inputEl);
 	return {
 		elem: mainComponent,
-		val: () => inputEl.value,
+		val: () => inputEl[valueName],
 	};
 }
 
