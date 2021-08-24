@@ -2,39 +2,66 @@ import projects from './modules/projects';
 import projectComponent from './components/projectComponent';
 import component from './modules/component';
 import modal from './modules/modal';
-import getUniqueKey from './modules/getUniqueKey';
+import inputWrapper from './components/inputWrapper';
 import './normalize.css';
 import './style.css';
 
-const testInfo1 = {
-	title: 'test title',
-	description: 'A descriptive description',
-	dueDate: '08/07/21',
-	priority: 1,
-};
-
 const projectContainer = document.querySelector('#projectContainer');
 
-const getNodes = () => [
-	component('h2', {
+const addProject = (name) =>
+{
+	modal.hide();
+	const projectElem = projectComponent(name);
+	projectContainer.append(projectElem);
+}
+
+const getNodes = () =>
+{
+	const nameInput = inputWrapper('Project name', 'value', component('input', {
 		props: {
-			class: [
-				'heading',
-			],
+			type: 'text',
+		}
+	}), {
+		id: 'projectNameInput',
+	})
+
+	const submitBtn = component('button', {
+		props: {
+			id: 'projectSubmitBtn',
+			onclick: () => addProject(nameInput.val()),
 		},
 		children: [
-			'Create new Project'
+			'Create'
 		]
-	}),
-	
-]
+	})
 
-const addProject = document.querySelector('#addProject');
-addProject.addEventListener('click', () =>
-{
-	// modal.show(getNodes())
-	const projectElem1 = projectComponent('Test');
-	projectContainer.append(projectElem1);
-})
+	return [
+		component('h2', {
+			props: {
+				class: [
+					'heading',
+					'noSideMargin',
+				],
+			},
+			children: [
+				'Create new Project'
+			]
+		}),
+		component('div', {
+			props: {
+				class: [
+					'centerDiv'
+				]
+			},
+			children: [
+				nameInput.elem,
+				submitBtn,
+			]
+		}),
+	]
+}
+
+const addProjectBtn = document.querySelector('#addProject');
+addProjectBtn.addEventListener('click', () => modal.show(getNodes()))
 
 // projectElem1.querySelector('.todos').append(todoComponent( testInfo1 ))

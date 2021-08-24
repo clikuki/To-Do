@@ -41,7 +41,11 @@ const modal = (() =>
 		modalState('remove');
 	}
 
-	const modalContent = component('div');
+	const modalContent = component('div', {
+		props: {
+			id: 'modalContent',
+		}
+	});
 
 	const modalCloseBtn = component('button', {
 		props: {

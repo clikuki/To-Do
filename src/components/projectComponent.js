@@ -16,7 +16,7 @@ const headerComponent = (() =>
 
 	const addTodos = (() =>
 	{
-		const addProject = (projectElem, todosContainer, todoInfo) =>
+		const addTodo = (projectElem, todosContainer, todoInfo) =>
 		{
 			// Todo: add checks before adding todo item
 			console.log(todoInfo.dueDate);
@@ -33,6 +33,7 @@ const headerComponent = (() =>
 				props: {
 					class: [
 						'heading',
+						'noSideMargin',
 					],
 				},
 				children: [
@@ -92,8 +93,8 @@ const headerComponent = (() =>
 			
 			const submitBtn = component('button', {
 				props: {
-					id: 'submitBtn',
-					onclick: () => addProject(projectElem, todosContainer, {
+					id: 'todoSubmitBtn',
+					onclick: () => addTodo(projectElem, todosContainer, {
 						title: titleInput.val(),
 						description: descInput.val(),
 						dueDate: dateInput.val(),
@@ -156,13 +157,6 @@ const headerComponent = (() =>
 			modal.show(getNodes(projectElem, todosContainer));
 		}
 	})()
-
-	const testInfo = {
-		title: 'test title',
-		description: 'A descriptive description',
-		dueDate: '08/07/21',
-		priority: 1,
-	};
 
 	return (name, projectElem, todosContainer) =>
 	{

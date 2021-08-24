@@ -78,7 +78,6 @@ footer
 	left: 50%;
 	transform: translate(-50%, -50%);
 	min-width: 50%;
-	min-height: 40%;
 	background-color: var(--main-bg-color);
 	padding: 0 40px 20px 40px;
 	border-radius: 10px;
@@ -274,13 +273,23 @@ footer
 	position: relative;
 }
 
-#submitBtn
+#projectSubmitBtn,
+#todoSubmitBtn
 {
 	padding: 10px 20px;
+}
+
+#todoSubmitBtn
+	{
 	position: absolute;
 	bottom: 0;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+#projectNameInput
+{
+	flex-grow: 1;
 }
 
 /* || Utilities */
@@ -330,6 +339,12 @@ footer
 .blueOnFocus:focus
 {
 	box-shadow: 0 0 0 .2rem #007bff40;
+}
+
+.noSideMargin
+{
+	margin-left: 0;
+	margin-right: 0;
 }
 
 /* || Simple recurring elem styling */
