@@ -28,24 +28,82 @@ const headerComponent = (() =>
 
 		const getNodes = (projectElem, todosContainer) =>
 		{
-			const titleInput = inputComponent({ label: 'Title' });
-			const descInput = inputComponent({ label: 'Description' });
-			const dueDateInput = component('input', {
+			const header = component('h2', {
 				props: {
-					type: 'date'
-				}
-			});
-			const priorityInput = inputComponent({ label: 'Priority' });
-
-			const getInputVals = () => ({
-				title: titleInput.val(),
-				description: descInput.val(),
-				dueDate: dueDateInput.valueAsDate,
-				priority: +priorityInput.val(),
+					class: [
+						'heading',
+					],
+				},
+				children: [
+					'Create a new project'
+				]
 			})
 
+			const titleInput = inputComponent('Title', 'input');
+
+			const descInput = inputComponent('Description', 'textarea', {
+				class: [
+					'descTextArea',
+					'noResize'
+				]
+			})
+
+			const dateInput = inputComponent('Due Date', 'input', {
+				type: 'date'
+			})
+
+			const priorityInput = component('div', {
+				props: {
+					class: [
+						'inputContainer'
+					]
+				},
+				children: [
+					component('label', {
+						props: {
+							for: 'priority',
+						},
+						children: [
+							'Priority:',
+						],
+					}),
+					component('select', {
+						props: {
+							id: 'priority',
+						},
+						children: [
+							component('option', {
+								props: {
+									value: 1,
+								},
+								children: [
+									'High'
+								]
+							}),
+							component('option', {
+								props: {
+									value: 2,
+								},
+								children: [
+									'Medium'
+								]
+							}),
+							component('option', {
+								props: {
+									value: 3,
+								},
+								children: [
+									'Low'
+								]
+							}),
+						]
+					})
+				]
+			})
+			
 			const submitBtn = component('button', {
 				props: {
+					id: 'submitBtn',
 					onclick: () => addProject(projectElem, todosContainer, getInputVals()),
 				},
 				children: [
@@ -53,38 +111,49 @@ const headerComponent = (() =>
 				]
 			});
 
-			return [
-				component('h2', {
-					props: {
-						class: [
-							'heading',
-						],
-					},
-					children: [
-						'Create a new project'
+			const leftSide = component('div', {
+				props: {
+					class: [
+						'verticalFlex',
+						'flexGrow',
 					]
-				}),
-				component('div', {
-					props: {
-						class: [
-							'centerDiv',
-							'verticalFlex',
-						],
-					},
-					children: [
-						titleInput.elem,
-						component('span', {
-							children: [
-								'Due Date: ',
-								dueDateInput,
-							]
-						}),
-						priorityInput.elem,
-						descInput.elem,
-						submitBtn,
-					]
-				}),
+				},
+				children: [
+					titleInput.elem,
+					descInput.elem,
+				]
+			})
 
+			const rightSide = component('div', {
+				props: {
+					class: [
+						'verticalFlex',
+						'flexGrow',
+					],
+					id: 'inputSubmitContainer',
+				},
+				children: [
+					dateInput.elem,
+					priorityInput,
+					submitBtn,
+				]
+			})
+
+			const inputSubmitContainer = component('div', {
+				props: {
+					class: [
+						'flex',
+					],
+				},
+				children: [
+					leftSide,
+					rightSide,
+				]
+			})
+
+			return [
+				header,
+				inputSubmitContainer,
 			]
 		}
 

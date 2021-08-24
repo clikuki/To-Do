@@ -99,53 +99,6 @@ footer
 	font-size: larger;
 }
 
-.inputContainer
-{
-	margin: 20px 0;
-	max-width: 500px;
-    width: 50vw;
-    height: 40px;
-    border-radius: 4px;
-    border: 1.3px solid rgba(0, 0, 0, .4);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    position: relative;
-    cursor: pointer;
-}
-
-.inputContainer input
-{
-	width: 95%;
-	height: 100%;
-	border: 0;
-	outline: none;
-	padding-left: 10px;
-	font-size: .9rem;
-	opacity: .8;
-	cursor: pointer;
-	background-color: transparent;
-}
-
-.inputContainer .placeholder
-{
-	background-color: var(--main-bg-color);
-	display: inline;
-	padding: 0px 8px 6px 8px;
-	box-sizing: content-box;
-	position: absolute;
-	top: 7px;
-	left: 5px;
-	transition: top .2s, font-size .2s;
-	color: rgba(0,0,0,0.65);
-	cursor: pointer;
-}
-
-.placeholder.inputFocused,
-.placeholder.inputHasText
-{
-    top: -12px;
-    font-size: .8rem;
-}
-
 /* || Project items styling */
 .heading
 {
@@ -284,10 +237,50 @@ footer
 	opacity: .5;
 }
 
+.inputContainer
+{
+	margin: 10px 0;
+}
+
+.inputContainer > label
+{
+	display: block;
+}
+
+.inputContainer > select
+{
+	padding: 10px;
+	appearance: none;
+	background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+}
+
+.inputContainer > :not(label)
+{
+	border: 1px solid #a7a7a7;
+	background-color: #fcfcfc;
+	border-radius: 4px;
+	width: 90%;
+}
+
 .descTextArea
 {
-	width: 50%;
-	height: 50px;
+	height: 120px;
+	border-radius: 4px;
+	border: 1px solid #a7a7a7;
+}
+
+#inputSubmitContainer
+{
+	position: relative;
+}
+
+#submitBtn
+{
+	padding: 10px 20px;
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 /* || Utilities */
@@ -310,6 +303,7 @@ footer
 
 .verticalFlex
 {
+	display: flex;
 	flex-direction: column;
 }
 
@@ -317,6 +311,28 @@ footer
 {
 	resize: none;
 }
+
+.flex
+{
+	display: flex;
+}
+
+.flexGrow
+{
+	flex-grow: 1;
+}
+
+.blueOnFocus
+{
+	transition: box-shadow .15s ease-in-out;
+}
+
+.blueOnFocus:focus
+{
+	box-shadow: 0 0 0 .2rem #007bff40;
+}
+
+/* || Simple recurring elem styling */
 
 img
 {

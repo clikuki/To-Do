@@ -1,9 +1,7 @@
 import component from "../modules/component";
 import getUniqueKey from "../modules/getUniqueKey";
 
-// Code taken from/based on here: https://codepen.io/alireza82/pen/eYWaqLZ
-
-const inputComponentMaker = ({ label, maxlength = 25 }) =>
+const inputComponentMaker = (label, tag, options = {}) =>
 {
 	const uniqueKey = getUniqueKey();
 
@@ -12,13 +10,12 @@ const inputComponentMaker = ({ label, maxlength = 25 }) =>
 			class: [
 				'inputContainer'
 			],
-		}
+		},
 	})
 
-	const inputEl = component('input', {
+	const inputEl = component(tag, {
 		props: {
-			maxlength: maxlength,
-			type: 'text',
+			...options,
 			autocomplete: 'off',
 			spellcheck: false,
 			id: uniqueKey
@@ -27,36 +24,14 @@ const inputComponentMaker = ({ label, maxlength = 25 }) =>
 
 	const labelElem = component('label', {
 		props: {
-			class: [
-				'placeholder'
-			],
 			for: uniqueKey,
 		},
 		children: [
-			label
+			`${label}: `
 		]
 	})
 
-	labelElem.addEventListener('click', () =>
-	{
-		inputEl.focus();
-	})
-
-	inputEl.addEventListener('blur', () =>
-	{
-		if (inputEl.value != '')
-		{
-			labelElem.classList.add('inputHasText');;
-		} else
-		{
-			labelElem.classList.remove('inputHasText');
-		}
-	})
-
-	inputEl.addEventListener('focus', () => labelElem.classList.add('inputFocused'))
-	inputEl.addEventListener('blur', () => labelElem.classList.remove('inputFocused'))
-
-	mainComponent.append(inputEl, labelElem);
+	mainComponent.append(labelElem, inputEl);
 	return {
 		elem: mainComponent,
 		val: () => inputEl.value,
