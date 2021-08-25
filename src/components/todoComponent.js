@@ -1,4 +1,6 @@
 import component from '../modules/component';
+import inputWrapper from './inputWrapper';
+import modal from '../modules/modal';
 import project from '../modules/projects';
 import edit from '../assets/edit_48x48.png';
 import remove from '../assets/delete_48x48.png';
@@ -42,6 +44,150 @@ const todoComponent = (() =>
 		{
 			removeFromStorage(projKey, todoKey);
 			removeFromDOM(todoElem);
+		}
+	})()
+
+	const editTodo = (() =>
+	{
+		const getNodes = (name, date, todoInfo, projKey, todoKey) =>
+		{
+			const header = component('h2', {
+				props: {
+					class: [
+						'heading',
+						'noSideMargin',
+					]
+				},
+				children: [
+					'Edit todo info'
+				]
+			})
+
+			const titleInput = inputWrapper('Title', 'value', component('input', {
+				props: {
+					maxlength: 25,
+					value: todoInfo.title,
+				}
+			}));
+
+			const descInput = inputWrapper('Description', 'value', component('textarea', {
+				props: {
+					class: [
+						'descTextArea',
+						'noResize'
+					],
+				},
+			}))
+			// Setting it in function doesn't work
+			descInput.elem.querySelector('textarea').value =  todoInfo.description;
+
+			const dateInput = inputWrapper('Due Date', 'valueAsDate', component('input', {
+				props: {
+					type: 'date',
+					valueAsDate: todoInfo.dueDate,
+				},
+			}))
+
+			const priorityInput = (() =>
+			{
+				const optionMaker = (value, text) => component('option', {
+					props: {
+						value,
+					},
+					children: [
+						text
+					]
+				})
+
+				const inputElem = component('select', {
+					children: [
+						optionMaker(1, 'High'),
+						optionMaker(2, 'Medium'),
+						optionMaker(3, 'Low'),
+					]
+				})
+
+				return inputWrapper('Priority', 'value', inputElem)
+			})()
+			// Setting it in function doesn't work
+			priorityInput.elem.querySelector('select').value =  todoInfo.priority;
+			
+			const submitBtn = component('button', {
+				props: {
+					id: 'todoSubmitBtn',
+					/* onclick: () => addTodo(projectElem, todosContainer, {
+						title: titleInput.val(),
+						description: descInput.val(),
+						dueDate: dateInput.val(),
+						priority: +priorityInput.val(),
+					}, key), */
+				},
+				children: [
+					'Create',
+				]
+			});
+
+			const submitBtnContainer = component('div', {
+				props: {
+					class: [
+						'centerDiv',
+						'flexGrow'
+					],
+				},
+				children: [
+					submitBtn,
+				]
+			})
+
+			const leftSide = component('div', {
+				props: {
+					class: [
+						'verticalFlex',
+						'flexGrow',
+					]
+				},
+				children: [
+					titleInput.elem,
+					descInput.elem,
+				]
+			})
+
+			const rightSide = component('div', {
+				props: {
+					class: [
+						'verticalFlex',
+						'flexGrow',
+					],
+					id: 'inputSubmitContainer',
+				},
+				children: [
+					dateInput.elem,
+					priorityInput.elem,
+					submitBtnContainer,
+				]
+			})
+
+			const inputSubmitContainer = component('div', {
+				props: {
+					class: [
+						'flex',
+					],
+				},
+				children: [
+					leftSide,
+					rightSide,
+				]
+			})
+
+			return [
+				header,
+				inputSubmitContainer,
+			]
+		}
+
+		return (name, date, priorityLevel, projKey, todoKey) =>
+		{
+			modal.show(getNodes(name, date, priorityLevel, projKey, todoKey));
 		}
 	})()
 
@@ -109,6 +255,7 @@ const todoComponent = (() =>
 		const editBtn = component('img', {
 			props: {
 				src: edit,
+				onclick: () => editTodo(name, date, todoInfo, projKey, todoKey),
 			}
 		})
 
