@@ -1,10 +1,11 @@
 import component from '../modules/component';
 import todoComponent from './todoComponent';
-import inputComponent from './inputWrapper';
+import inputWrapper from './inputWrapper';
 import project from '../modules/projects';
 import modal from '../modules/modal';
 import arrow from '../assets/arrow.svg';
 import add from '../assets/add_48x48.png';
+import remove from '../assets/delete_48x48.png';
 
 const headerComponent = (() =>
 {
@@ -16,29 +17,49 @@ const headerComponent = (() =>
 
 	const addTodos = (() =>
 	{
-		const addTodo = (projectElem, todosContainer, todoInfo, projKey) =>
+		const addTodo = (() =>
 		{
-			try
-			{
-				// Add to storage
-				const projectObj = project.get(projKey);
-				const todoKey = projectObj.todos.add(todoInfo).key;
+			const errorObj = {
+				'Invalid or missing key/s': 'Don\'t leave the date option empty!',
+				'Invalid values': 'Don\'t leave the title option empty!',
+			}
 
-				// Add to project todos
+			const addToStorage = (projKey, todoInfo) =>
+			{
+				const projectObj = project.get(projKey);
+				return projectObj.todos.add(todoInfo).key;
+			}
+
+			const appendToDOM = (projectElem, todosContainer, todoInfo, todoKey) =>
+			{
 				const todoElem = todoComponent(todoInfo, todoKey);
 				todosContainer.append(todoElem);
 				projectElem.classList.remove('empty');
-				modal.hide();
 			}
-			catch (e)
+
+			return (projectElem, todosContainer, todoInfo, projKey) =>
 			{
-				if(e.message === 'Invalid itemInfo: invalid or missing key/s')
+				try
 				{
-					alert('Don\'t leave the date option as null!')
+					// Add to storage and get key
+					const todoKey = addToStorage(projKey, todoInfo);
+
+					// Append to project todos
+					appendToDOM(projectElem, todosContainer, todoInfo, todoKey);
+
+					modal.hide();
 				}
-				else throw e;
+				catch (e)
+				{
+					const userMessage = errorObj[e.message];
+					if(userMessage)
+					{
+						alert(userMessage)
+					}
+					else throw e;
+				}
 			}
-		}
+		})()
 
 		const getNodes = (projectElem, todosContainer, key) =>
 		{
@@ -54,13 +75,13 @@ const headerComponent = (() =>
 				]
 			})
 
-			const titleInput = inputComponent('Title', 'value', component('input', {
+			const titleInput = inputWrapper('Title', 'value', component('input', {
 				props: {
 					maxlength: 25,
 				}
 			}));
 
-			const descInput = inputComponent('Description', 'value', component('textarea', {
+			const descInput = inputWrapper('Description', 'value', component('textarea', {
 				props: {
 					class: [
 						'descTextArea',
@@ -69,40 +90,33 @@ const headerComponent = (() =>
 				},
 			}))
 
-			const dateInput = inputComponent('Due Date', 'valueAsDate', component('input', {
+			const dateInput = inputWrapper('Due Date', 'valueAsDate', component('input', {
 				props: {
 					type: 'date'
 				},
 			}))
 
-			const priorityInput = inputComponent('Priority', 'value', component('select', {
-				children: [
-					component('option', {
-						props: {
-							value: 1,
-						},
-						children: [
-							'High'
-						]
-					}),
-					component('option', {
-						props: {
-							value: 2,
-						},
-						children: [
-							'Medium'
-						]
-					}),
-					component('option', {
-						props: {
-							value: 3,
-						},
-						children: [
-							'Low'
-						]
-					}),
-				]
-			}) )
+			const priorityInput = (() =>
+			{
+				const optionMaker = (value, text) => component('option', {
+					props: {
+						value,
+					},
+					children: [
+						text
+					]
+				})
+
+				const inputElem = component('select', {
+					children: [
+						optionMaker(1, 'High'),
+						optionMaker(2, 'Medium'),
+						optionMaker(3, 'Low'),
+					]
+				})
+
+				return inputWrapper('Priority', 'value', inputElem)
+			})()
 			
 			const submitBtn = component('button', {
 				props: {
@@ -118,6 +132,18 @@ const headerComponent = (() =>
 					'Create',
 				]
 			});
+
+			const submitBtnContainer = component('div', {
+				props: {
+					class: [
+						'centerDiv',
+						'flexGrow'
+					],
+				},
+				children: [
+					submitBtn,
+				]
+			})
 
 			const leftSide = component('div', {
 				props: {
@@ -143,7 +169,7 @@ const headerComponent = (() =>
 				children: [
 					dateInput.elem,
 					priorityInput.elem,
-					submitBtn,
+					submitBtnContainer,
 				]
 			})
 
@@ -168,6 +194,25 @@ const headerComponent = (() =>
 		return (projectElem, todosContainer, key) =>
 		{
 			modal.show(getNodes(projectElem, todosContainer, key));
+		}
+	})()
+
+	const removeProject = (() =>
+	{
+		const removeFromStorage = (key) =>
+		{
+			project.remove(key);
+		}
+		
+		const removeFromDOM = (projectElem) =>
+		{
+			projectElem.remove()
+		}
+
+		return (projectElem, key) =>
+		{
+			removeFromStorage(key);
+			removeFromDOM(projectElem);
 		}
 	})()
 
@@ -204,6 +249,13 @@ const headerComponent = (() =>
 			}
 		})
 
+		const removeProjectBtn = component('img', {
+			props: {
+				src: remove,
+				onclick: () => removeProject(mainComponent, key),
+			}
+		})
+
 		const addTodoBtn = component('img', {
 			props: {
 				src: add,
@@ -211,7 +263,7 @@ const headerComponent = (() =>
 			},
 		})
 
-		mainComponent.append(toggleTodosBtn, projectName, addTodoBtn)
+		mainComponent.append(toggleTodosBtn, projectName, removeProjectBtn, addTodoBtn)
 		return mainComponent;
 	}
 })()

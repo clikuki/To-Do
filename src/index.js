@@ -12,7 +12,7 @@ const addProject = (name) =>
 {
 	try
 	{
-		// Add to storage
+		// Add to storage and get key
 		const projectKey = project.add(name).key;
 	
 		// Append element to projectContainer
@@ -22,7 +22,7 @@ const addProject = (name) =>
 	}
 	catch (e)
 	{
-		if(e.message === 'Invalid name: must not be an empty string')
+		if(e.message === 'Name must not be an empty string')
 		{
 			alert('Project name must not be an empty string!')
 		}

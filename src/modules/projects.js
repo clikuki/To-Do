@@ -2,9 +2,9 @@ import getUniqueKey from "./getUniqueKey";
 
 const getIndexFromKey = (array, key) =>
 {
-	if (typeof key !== 'string') throw new Error('Invalid key: must be a string');
+	if (typeof key !== 'string') throw new Error('Key must be a string');
 	const index = array.findIndex(item => item.key === key);
-	if (index === -1) throw new Error('Invalid key: item not found');
+	if (index === -1) throw new Error('Item not found');
 
 	return index;
 }
@@ -38,51 +38,74 @@ const todoMethods = (() =>
 
 	const add = (() =>
 	{
-		const keyCheck = (() =>
+		const reqKeys = {
+			title: String,
+			description: String,
+			dueDate: Date, 
+			priority: Number,
+		}
+
+		const priorityRange = {
+			min: 1,
+			max: 3,
+		}
+
+		const valCheck = todoInfo =>
 		{
-			const reqKeys = {
-				title: String,
-				description: String,
-				dueDate: Date, 
-				priority: Number,
+			const checksArray = [
+				todoInfo.title.length <= 0,
+				todoInfo.priority < priorityRange.min,
+				todoInfo.priority > priorityRange.max,
+			]
+
+			for(const check of checksArray)
+			{
+				if(check) return false;
 			}
 
-			return todoInfo =>
+			return true;
+		}
+
+		const keyCheck = todoInfo =>
+		{
+			try
 			{
-				try
-				{
-					let numOfKeys = 0;
-		
-					for (const [key, val] of Object.entries(todoInfo))
-					{
-						const validKey = Object.keys(reqKeys).includes(key);
-						const correctType = val.constructor === reqKeys[key];
+				let numOfKeys = 0;
 	
-						if(validKey && correctType) ++numOfKeys;
-						else return false;
-					}
-		
-					if(numOfKeys !== Object.keys(reqKeys).length) return false;
-		
-					return true;
-				}
-				catch (e)
+				for (const [key, val] of Object.entries(todoInfo))
 				{
-					return false;
+					const validKey = Object.keys(reqKeys).includes(key);
+					const correctType = val.constructor === reqKeys[key];
+
+					if(validKey && correctType) ++numOfKeys;
+					else return false;
 				}
+	
+				if(numOfKeys !== Object.keys(reqKeys).length) return false;
+	
+				return true;
 			}
-		})()
+			catch
+			{
+				return false;
+			}
+		}
 
 		return (todoList, todoInfo) =>
 		{
 			if (typeof todoInfo !== 'object')
 			{
-				throw new Error('Invalid itemInfo: must be an object');
+				throw new Error('TodoInfo must be an object');
 			}
 
 			if (!keyCheck(todoInfo))
 			{
-				throw new Error('Invalid itemInfo: invalid or missing key/s');
+				throw new Error('Invalid or missing key/s');
+			}
+
+			if(!valCheck(todoInfo))
+			{
+				throw new Error('Invalid values');
 			}
 
 			const todoObj = {
@@ -154,8 +177,8 @@ const projectMethods = (() =>
 
 	const add = (projectName = undefined) =>
 	{
-		if (typeof projectName !== 'string') throw new TypeError('Invalid name: must be a string');
-		if (projectName === '') throw new Error('Invalid name: must not be an empty string');
+		if (typeof projectName !== 'string') throw new TypeError('Name must be a string');
+		if (projectName === '') throw new Error('Name must not be an empty string');
 
 		const todoList = [];
 		const project = {

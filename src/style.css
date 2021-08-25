@@ -126,6 +126,7 @@ footer
 {
 	width: 30px;
 	height: 30px;
+	margin: 0 5px;
 }
 
 .projectHeader
@@ -268,23 +269,10 @@ footer
 	border: 1px solid #a7a7a7;
 }
 
-#inputSubmitContainer
-{
-	position: relative;
-}
-
 #projectSubmitBtn,
 #todoSubmitBtn
 {
 	padding: 10px 20px;
-}
-
-#todoSubmitBtn
-	{
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	transform: translate(-50%, -50%);
 }
 
 #projectNameInput
