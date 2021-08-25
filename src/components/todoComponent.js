@@ -1,5 +1,7 @@
 import component from '../modules/component';
+import project from '../modules/projects';
 import edit from '../assets/edit_48x48.png';
+import remove from '../assets/delete_48x48.png';
 
 const todoComponent = (() =>
 {
@@ -23,6 +25,26 @@ const todoComponent = (() =>
 		return `${day}/${month}/${year}`
 	}
 
+	const removeTodo = (() =>
+	{
+		const removeFromStorage = (projKey, todoKey) =>
+		{
+			const projObj = project.get(projKey);
+			projObj.todos.remove(todoKey)
+		}
+
+		const removeFromDOM = (todoElem) =>
+		{
+			todoElem.remove();
+		}
+
+		return (todoElem, projKey, todoKey) =>
+		{
+			removeFromStorage(projKey, todoKey);
+			removeFromDOM(todoElem);
+		}
+	})()
+
 	/**
 	 * @param {Object} todoInfo
 	 * @param {String} todoInfo.title
@@ -31,7 +53,7 @@ const todoComponent = (() =>
 	 * @param {Number} todoInfo. priority
 	 * @returns {HTMLElement} Returns a todo component
 	 */
-	return (todoInfo, key) =>
+	return (todoInfo, projKey, todoKey) =>
 	{
 		const mainComponent = component('div', {
 			props: {
@@ -40,7 +62,7 @@ const todoComponent = (() =>
 				],
 				onclick: (e) => toggleTodoState(mainComponent, status, editBtn, e.target),
 				'data-priority': todoInfo.priority,
-				'data-key': key,
+				'data-key': todoKey,
 			}
 		})
 	
@@ -76,14 +98,28 @@ const todoComponent = (() =>
 				]
 			}
 		})
+
+		const removeBtn = component('img', {
+			props: {
+				src: remove,
+				onclick: () => removeTodo(mainComponent, projKey, todoKey)
+			}
+		})
 		
 		const editBtn = component('img', {
 			props: {
 				src: edit,
 			}
 		})
+
+		const btnContainer = component('div', {
+			children: [
+				removeBtn,
+				editBtn,
+			]
+		})
 	
-		mainComponent.append( name, status, date, editBtn );
+		mainComponent.append( name, status, date, btnContainer );
 		return mainComponent;
 	}
 })()

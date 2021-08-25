@@ -30,9 +30,9 @@ const headerComponent = (() =>
 				return projectObj.todos.add(todoInfo).key;
 			}
 
-			const appendToDOM = (projectElem, todosContainer, todoInfo, todoKey) =>
+			const appendToDOM = (projectElem, todosContainer, todoInfo, projKey, todoKey) =>
 			{
-				const todoElem = todoComponent(todoInfo, todoKey);
+				const todoElem = todoComponent(todoInfo, projKey, todoKey);
 				todosContainer.append(todoElem);
 				projectElem.classList.remove('empty');
 			}
@@ -45,7 +45,7 @@ const headerComponent = (() =>
 					const todoKey = addToStorage(projKey, todoInfo);
 
 					// Append to project todos
-					appendToDOM(projectElem, todosContainer, todoInfo, todoKey);
+					appendToDOM(projectElem, todosContainer, todoInfo, projKey, todoKey);
 
 					modal.hide();
 				}
