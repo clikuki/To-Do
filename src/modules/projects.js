@@ -4,7 +4,10 @@ const getIndexFromKey = (array, key) =>
 {
 	if (typeof key !== 'string') throw new Error('Key must be a string');
 	const index = array.findIndex(item => item.key === key);
-	if (index === -1) throw new Error('Item not found');
+	if (index === -1)
+	{
+		throw new Error('Item not found');
+	}
 
 	return index;
 }
@@ -16,6 +19,7 @@ const todoMethods = (() =>
 	const keyCheck = (() =>
 	{
 		const reqKeys = {
+			completed: Boolean,
 			title: String,
 			description: String,
 			dueDate: Date, 
@@ -26,18 +30,13 @@ const todoMethods = (() =>
 		{
 			try
 			{
-				let numOfKeys = 0;
-	
 				for (const [key, val] of Object.entries(todoInfo))
 				{
 					const validKey = Object.keys(reqKeys).includes(key);
 					const correctType = val.constructor === reqKeys[key];
 	
-					if(validKey && correctType) ++numOfKeys;
-					else return false;
+					if(!(validKey && correctType)) return false;
 				}
-	
-				if(numOfKeys !== Object.keys(reqKeys).length) return false;
 	
 				return true;
 			}

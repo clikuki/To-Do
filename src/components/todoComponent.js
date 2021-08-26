@@ -1,22 +1,37 @@
 import component from '../modules/component';
 import inputWrapper from './inputWrapper';
 import modal from '../modules/modal';
+import persistentSave from '../modules/persistentSave';
 import project from '../modules/projects';
 import edit from '../assets/edit_48x48.png';
 import remove from '../assets/delete_48x48.png';
 
 const todoComponent = (() =>
 {
-	const toggleTodoState = (todoElem, statusDisplayElem, editBtn, clickedElem) =>
+	const toggleTodoState = (() =>
 	{
-		if(clickedElem === editBtn) return;
+		const editStorage = (projKey, todoKey) =>
+		{
+			const projObj = project.get(projKey);
+			const completeState = !projObj.todos.get(todoKey).completed;
+			projObj.todos.edit(todoKey, { completed: completeState });
+		}
 
-		const currStatus = statusDisplayElem.textContent.toLowerCase();
+		const editElem = (todoElem, statusDisplayElem) =>
+		{
+			const currStatus = statusDisplayElem.textContent.toLowerCase();
+			if(currStatus === 'complete') statusDisplayElem.textContent = 'Incomplete';
+			else statusDisplayElem.textContent = 'Complete';
+			todoElem.classList.toggle('completed');
+		}
 
-		if(currStatus === 'complete') statusDisplayElem.textContent = 'Incomplete';
-		else statusDisplayElem.textContent = 'Complete';
-		todoElem.classList.toggle('completed');
-	}
+		return (todoElem, statusDisplayElem, projKey, todoKey) =>
+		{
+			editStorage(projKey, todoKey);
+			editElem(todoElem, statusDisplayElem);
+			persistentSave.save();
+		}
+	})()
 	
 	const parseDate = (dateObj) =>
 	{
@@ -32,7 +47,7 @@ const todoComponent = (() =>
 		const removeFromStorage = (projKey, todoKey) =>
 		{
 			const projObj = project.get(projKey);
-			projObj.todos.remove(todoKey)
+			projObj.todos.remove(todoKey);
 		}
 
 		const removeFromDOM = (todoElem) =>
@@ -44,6 +59,7 @@ const todoComponent = (() =>
 		{
 			removeFromStorage(projKey, todoKey);
 			removeFromDOM(todoElem);
+			persistentSave.save();
 		}
 	})()
 
@@ -70,12 +86,13 @@ const todoComponent = (() =>
 				projectElem.setAttribute('data-priority', todoInfo.priority);
 			}
 
-			return (projectElem, name, date, projKey, todoKey, todoInfo) =>
+			return (projectElem, name, date, projKey, todoKey, newTodoInfo) =>
 			{
 				try
 				{
-					editStorage(projKey, todoKey, todoInfo);	
-					editElem(projectElem, name, date, todoInfo);
+					editStorage(projKey, todoKey, newTodoInfo);	
+					editElem(projectElem, name, date, newTodoInfo);
+					persistentSave.save();
 					modal.hide();
 				}
 				catch (e)
@@ -234,6 +251,7 @@ const todoComponent = (() =>
 
 	/**
 	 * @param {Object} todoInfo
+	 * @param {Boolean} todoInfo.completed
 	 * @param {String} todoInfo.title
 	 * @param {String} todoInfo.description
 	 * @param {String} todoInfo.dueDate
@@ -247,11 +265,19 @@ const todoComponent = (() =>
 				class: [
 					'todoItem'
 				],
-				onclick: (e) => toggleTodoState(mainComponent, status, editBtn, e.target),
+				onclick: (e) =>
+				{
+					if(e.target !== editBtn && e.target !== removeBtn)
+					{
+						toggleTodoState(mainComponent, status, projKey, todoKey)
+					}
+				},
 				'data-priority': todoInfo.priority,
 				'data-key': todoKey,
 			}
 		})
+
+		if(todoInfo.completed) mainComponent.classList.add('completed');
 	
 		const name = component('h3', {
 			children: [
@@ -266,7 +292,7 @@ const todoComponent = (() =>
 
 		const status = component('span', {
 			children: [
-				'Incomplete'
+				todoInfo.completed ? 'Complete' : 'Incomplete',
 			],
 			props: {
 				class: [

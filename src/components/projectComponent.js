@@ -1,6 +1,7 @@
 import component from '../modules/component';
 import todoComponent from './todoComponent';
 import inputWrapper from './inputWrapper';
+import persistentSave from '../modules/persistentSave';
 import project from '../modules/projects';
 import modal from '../modules/modal';
 import arrow from '../assets/arrow.svg';
@@ -47,6 +48,7 @@ const headerComponent = (() =>
 					// Append to project todos
 					appendToDOM(projectElem, todosContainer, todoInfo, projKey, todoKey);
 
+					persistentSave.save();
 					modal.hide();
 				}
 				catch (e)
@@ -124,6 +126,7 @@ const headerComponent = (() =>
 				props: {
 					id: 'todoSubmitBtn',
 					onclick: () => addTodo(projectElem, todosContainer, {
+						completed: false,
 						title: titleInput.inputElem.value,
 						description: descInput.inputElem.value,
 						dueDate: dateInput.inputElem.valueAsDate,
@@ -213,6 +216,7 @@ const headerComponent = (() =>
 		{
 			removeFromStorage(key);
 			removeFromDOM(projectElem);
+			persistentSave.save();
 		}
 	})()
 

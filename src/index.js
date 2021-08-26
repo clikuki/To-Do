@@ -1,4 +1,5 @@
 import project from './modules/projects';
+import persistentSave from './modules/persistentSave';
 import projectComponent from './components/projectComponent';
 import component from './modules/component';
 import modal from './modules/modal';
@@ -7,6 +8,7 @@ import './normalize.css';
 import './style.css';
 
 const projectContainer = document.querySelector('#projectContainer');
+persistentSave.load(projectContainer);
 
 const addProject = (name) =>
 {
@@ -18,6 +20,7 @@ const addProject = (name) =>
 		// Append element to projectContainer
 		const projectElem = projectComponent(name, projectKey);
 		projectContainer.append(projectElem);
+		persistentSave.save();
 		modal.hide();
 	}
 	catch (e)
@@ -83,9 +86,5 @@ const getNodes = () =>
 	return nodeContainer;
 }
 
-window.projects = project;
-
 const addProjectBtn = document.querySelector('#addProject');
 addProjectBtn.addEventListener('click', () => modal.show(getNodes()))
-
-// projectElem1.querySelector('.todos').append(todoComponent( testInfo1 ))
