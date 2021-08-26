@@ -58,7 +58,6 @@ const todoComponent = (() =>
 			}
 
 			/**
-			 * 
 			 * @param {HTMLElement} projectElem 
 			 * @param {HTMLElement} name 
 			 * @param {HTMLElement} date 
@@ -92,6 +91,8 @@ const todoComponent = (() =>
 
 		const getNodes = (projectElem, name, date, todoInfo, projKey, todoKey) =>
 		{
+			const nodeContainer = new DocumentFragment();
+		
 			const header = component('h2', {
 				props: {
 					class: [
@@ -221,10 +222,8 @@ const todoComponent = (() =>
 				]
 			})
 
-			return [
-				header,
-				inputSubmitContainer,
-			]
+			nodeContainer.append( header, inputSubmitContainer );
+			return nodeContainer;
 		}
 
 		return (projectElem, name, date, todoInfo, projKey, todoKey) =>

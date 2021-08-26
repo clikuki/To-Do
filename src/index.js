@@ -32,6 +32,20 @@ const addProject = (name) =>
 
 const getNodes = () =>
 {
+	const nodeContainer = new DocumentFragment();
+
+	const header = component('h2', {
+		props: {
+			class: [
+				'heading',
+				'noSideMargin',
+			],
+		},
+		children: [
+			'Create new Project'
+		]
+	})
+
 	const nameInput = inputWrapper('Project name', component('input', {
 		props: {
 			type: 'text',
@@ -53,30 +67,20 @@ const getNodes = () =>
 		]
 	})
 
-	return [
-		component('h2', {
-			props: {
-				class: [
-					'heading',
-					'noSideMargin',
-				],
-			},
-			children: [
-				'Create new Project'
+	const flexDiv = component('div', {
+		props: {
+			class: [
+				'centerDiv'
 			]
-		}),
-		component('div', {
-			props: {
-				class: [
-					'centerDiv'
-				]
-			},
-			children: [
-				nameInput.elem,
-				submitBtn,
-			]
-		}),
-	]
+		},
+		children: [
+			nameInput.elem,
+			submitBtn,
+		]
+	});
+
+	nodeContainer.append( header, flexDiv );
+	return nodeContainer;
 }
 
 window.projects = project;

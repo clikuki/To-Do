@@ -63,6 +63,8 @@ const headerComponent = (() =>
 
 		const getNodes = (projectElem, todosContainer, key) =>
 		{
+			const nodeContainer = new DocumentFragment();
+		
 			const header = component('h2', {
 				props: {
 					class: [
@@ -185,10 +187,8 @@ const headerComponent = (() =>
 				]
 			})
 
-			return [
-				header,
-				inputSubmitContainer,
-			]
+			nodeContainer.append( header, inputSubmitContainer )
+			return nodeContainer;
 		}
 
 		return (projectElem, todosContainer, key) =>

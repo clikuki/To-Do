@@ -22,11 +22,7 @@ const modal = (() =>
 
 	const emptyModal = () => modalContent.textContent = '';
 
-	const fillModal = nodes =>
-	{
-		emptyModal();
-		modalContent.append(...nodes);
-	}
+	const fillModal = docFragment => modalContent.appendChild(docFragment);
 
 	/**
 	 * Hides the modal box
@@ -39,11 +35,12 @@ const modal = (() =>
 
 	/**
 	 * Reveals the modal box
-	 * @param {Array<HTMLElement>} nodes 
+	 * @param {DocumentFragment} nodes 
 	 */
-	const show = nodes =>
+	const show = docFragment =>
 	{
-		fillModal(nodes);
+		emptyModal();
+		fillModal(docFragment);
 		modalState('remove');
 	}
 
