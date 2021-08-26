@@ -13,7 +13,66 @@ const removeAtIndex = (array, index) => array.splice(index, index + 1);
 
 const todoMethods = (() =>
 {
-	const get =  (() =>
+	const keyCheck = (() =>
+	{
+		const reqKeys = {
+			title: String,
+			description: String,
+			dueDate: Date, 
+			priority: Number,
+		}
+
+		return todoInfo =>
+		{
+			try
+			{
+				let numOfKeys = 0;
+	
+				for (const [key, val] of Object.entries(todoInfo))
+				{
+					const validKey = Object.keys(reqKeys).includes(key);
+					const correctType = val.constructor === reqKeys[key];
+	
+					if(validKey && correctType) ++numOfKeys;
+					else return false;
+				}
+	
+				if(numOfKeys !== Object.keys(reqKeys).length) return false;
+	
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+	})()
+
+	const valCheck = (() =>
+	{
+		const priorityRange = {
+			min: 1,
+			max: 3,
+		}
+
+		return todoInfo =>
+		{
+			const checksArray = [
+				todoInfo.title.length <= 0,
+				todoInfo.priority < priorityRange.min,
+				todoInfo.priority > priorityRange.max,
+			]
+	
+			for(const check of checksArray)
+			{
+				if(check) return false;
+			}
+	
+			return true;
+		}
+	})() 
+
+	const get = (() =>
 	{
 		const deepCopy = array =>
 		{
@@ -33,91 +92,43 @@ const todoMethods = (() =>
 			return newArr;
 		}
 
-		return todoList => deepCopy(todoList);
+		return (todoList, key) =>
+		{
+			if(key) {
+				const todoIndex = getIndexFromKey(todoList, key);
+				return todoList[todoIndex];
+			}
+
+			return	deepCopy(todoList);
+		}
 	})()
 
-	const add = (() =>
+	const add =  (todoList, todoInfo) =>
 	{
-		const reqKeys = {
-			title: String,
-			description: String,
-			dueDate: Date, 
-			priority: Number,
-		}
-
-		const priorityRange = {
-			min: 1,
-			max: 3,
-		}
-
-		const valCheck = todoInfo =>
+		if (typeof todoInfo !== 'object')
 		{
-			const checksArray = [
-				todoInfo.title.length <= 0,
-				todoInfo.priority < priorityRange.min,
-				todoInfo.priority > priorityRange.max,
-			]
-
-			for(const check of checksArray)
-			{
-				if(check) return false;
-			}
-
-			return true;
+			throw new Error('TodoInfo must be an object');
 		}
 
-		const keyCheck = todoInfo =>
+		if (!keyCheck(todoInfo))
 		{
-			try
-			{
-				let numOfKeys = 0;
-	
-				for (const [key, val] of Object.entries(todoInfo))
-				{
-					const validKey = Object.keys(reqKeys).includes(key);
-					const correctType = val.constructor === reqKeys[key];
-
-					if(validKey && correctType) ++numOfKeys;
-					else return false;
-				}
-	
-				if(numOfKeys !== Object.keys(reqKeys).length) return false;
-	
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
+			throw new Error('Invalid or missing key/s');
 		}
 
-		return (todoList, todoInfo) =>
+		if(!valCheck(todoInfo))
 		{
-			if (typeof todoInfo !== 'object')
-			{
-				throw new Error('TodoInfo must be an object');
-			}
-
-			if (!keyCheck(todoInfo))
-			{
-				throw new Error('Invalid or missing key/s');
-			}
-
-			if(!valCheck(todoInfo))
-			{
-				throw new Error('Invalid values');
-			}
-
-			const todoObj = {
-				key: getUniqueKey(),
-				completed: false,
-				...todoInfo,
-			};
-
-			todoList.push(todoObj);
-			return todoObj;
+			throw new Error('Invalid value/s');
 		}
-	})()
+
+		const todoObj = {
+			key: getUniqueKey(),
+			completed: false,
+			...todoInfo,
+		};
+
+		todoList.push(todoObj);
+		return todoObj;
+	}
 
 	const remove = (todoList, key) =>
 	{
@@ -129,12 +140,11 @@ const todoMethods = (() =>
 	{
 		const editProps = (obj, editObj) =>
 		{
+			if(!keyCheck(editObj)) throw new TypeError('Invalid value/s');
+
 			for (const [key, val] of Object.entries(editObj))
 			{
-				if ({}.hasOwnProperty.call(obj, key))
-				{
-					obj[key] = val;
-				}
+				obj[key] = val;
 			}
 		}
 
@@ -142,6 +152,7 @@ const todoMethods = (() =>
 		{
 			const todoIndex = getIndexFromKey(todoList, key);
 			editProps(todoList[todoIndex], editObj);
+			return todoList[todoIndex];
 		}
 	})()
 
@@ -185,7 +196,7 @@ const projectMethods = (() =>
 			projectName,
 			key: getUniqueKey(),
 			todos: {
-				get: () => todoMethods.get(todoList),
+				get: (key) => todoMethods.get(todoList, key),
 				add: todoInfo => todoMethods.add(todoList, todoInfo),
 				remove: key => todoMethods.remove(todoList, key),
 				edit: (key, editObj) => todoMethods.edit(todoList, key, editObj),

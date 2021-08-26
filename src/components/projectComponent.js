@@ -15,13 +15,13 @@ const headerComponent = (() =>
 		projectElem.classList.toggle('active');
 	}
 
-	const addTodos = (() =>
+	const addTodoCB = (() =>
 	{
 		const addTodo = (() =>
 		{
 			const errorObj = {
 				'Invalid or missing key/s': 'Don\'t leave the date option empty!',
-				'Invalid values': 'Don\'t leave the title option empty!',
+				'Invalid value/s': 'Don\'t leave the title option empty!',
 			}
 
 			const addToStorage = (projKey, todoInfo) =>
@@ -259,7 +259,7 @@ const headerComponent = (() =>
 		const addTodoBtn = component('img', {
 			props: {
 				src: add,
-				onclick: () => addTodos(projectElem, todosContainer, key),
+				onclick: () => addTodoCB(projectElem, todosContainer, key),
 			},
 		})
 

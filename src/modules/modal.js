@@ -20,16 +20,22 @@ const modal = (() =>
 		classSwitch(mainElem, operation, 'stopScroll')
 	}
 
+	const emptyModal = () => modalContent.textContent = '';
+
 	const fillModal = nodes =>
 	{
-		modalContent.textContent = '';
+		emptyModal();
 		modalContent.append(...nodes);
 	}
 
 	/**
 	 * Hides the modal box
 	 */
-	const hide = () => modalState('add');
+	const hide = () =>
+	{
+		emptyModal();
+		modalState('add');
+	}
 
 	/**
 	 * Reveals the modal box

@@ -47,9 +47,50 @@ const todoComponent = (() =>
 		}
 	})()
 
-	const editTodo = (() =>
+	const editTodoCB = (() =>
 	{
-		const getNodes = (name, date, todoInfo, projKey, todoKey) =>
+		const editTodo = (() =>
+		{
+			const editStorage = (projKey, todoKey, todoInfo) =>
+			{
+				const projObj = project.get(projKey);
+				projObj.todos.edit(todoKey, todoInfo);
+			}
+
+			/**
+			 * 
+			 * @param {HTMLElement} projectElem 
+			 * @param {HTMLElement} name 
+			 * @param {HTMLElement} date 
+			 * @param {Object} todoInfo 
+			 */
+			const editElem = (projectElem, name, date, todoInfo) =>
+			{
+				name.textContent = todoInfo.title;
+				date.textContent = parseDate(todoInfo.dueDate);
+				projectElem.setAttribute('data-priority', todoInfo.priority);
+			}
+
+			return (projectElem, name, date, projKey, todoKey, todoInfo) =>
+			{
+				try
+				{
+					editStorage(projKey, todoKey, todoInfo);	
+					editElem(projectElem, name, date, todoInfo);
+					modal.hide();
+				}
+				catch (e)
+				{
+					if(e.message === 'Invalid value/s')
+					{
+						alert('Invalid values! ')
+					}
+					else throw e;
+				}
+			}
+		})()
+
+		const getNodes = (projectElem, name, date, todoInfo, projKey, todoKey) =>
 		{
 			const header = component('h2', {
 				props: {
@@ -116,15 +157,15 @@ const todoComponent = (() =>
 			const submitBtn = component('button', {
 				props: {
 					id: 'todoSubmitBtn',
-					/* onclick: () => addTodo(projectElem, todosContainer, {
-						title: titleInput.val(),
-						description: descInput.val(),
-						dueDate: dateInput.val(),
-						priority: +priorityInput.val(),
-					}, key), */
+					onclick: () => editTodo(projectElem, name, date, projKey, todoKey, {
+						title: titleInput.inputElem.value,
+						description: descInput.inputElem.value,
+						dueDate: dateInput.inputElem.valueAsDate,
+						priority: +priorityInput.inputElem.value,
+					}),
 				},
 				children: [
-					'Create',
+					'Edit',
 				]
 			});
 
@@ -186,9 +227,9 @@ const todoComponent = (() =>
 			]
 		}
 
-		return (name, date, priorityLevel, projKey, todoKey) =>
+		return (projectElem, name, date, todoInfo, projKey, todoKey) =>
 		{
-			modal.show(getNodes(name, date, priorityLevel, projKey, todoKey));
+			modal.show(getNodes(projectElem, name, date, todoInfo, projKey, todoKey));
 		}
 	})()
 
@@ -256,7 +297,7 @@ const todoComponent = (() =>
 		const editBtn = component('img', {
 			props: {
 				src: edit,
-				onclick: () => editTodo(name, date, todoInfo, projKey, todoKey),
+				onclick: () => editTodoCB(mainComponent, name, date, todoInfo, projKey, todoKey),
 			}
 		})
 
