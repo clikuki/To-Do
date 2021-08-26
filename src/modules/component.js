@@ -26,8 +26,8 @@ export default (tag, { props = {}, children = [] } = {}) =>
 				break;
 
 			default:
-				element.setAttribute(key, value);
-				element[key] = value;
+				if(typeof value !== 'function') element.setAttribute(key, value);
+				else element[key] = value;
 				break;
 		}
 	}

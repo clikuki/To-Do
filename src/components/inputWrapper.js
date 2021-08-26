@@ -6,7 +6,7 @@ import getUniqueKey from "../modules/getUniqueKey";
  * @param {HTMLElement} inputElem 
  * @returns An input element wrapped with a div with a <label> element
  */
-const inputWrapper = (labelText, valueGetterKey, inputElem, containerProps = {}) =>
+const inputWrapper = (labelText, inputElem, containerProps = {}) =>
 {
 	const id = inputElem.id || getUniqueKey();
 	inputElem.id = id;
@@ -42,7 +42,7 @@ const inputWrapper = (labelText, valueGetterKey, inputElem, containerProps = {})
 	mainComponent.append(labelElem, inputElem);
 	return {
 		elem: mainComponent,
-		val: () => inputElem[valueGetterKey],
+		inputElem,
 	};
 }
 

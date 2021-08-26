@@ -63,14 +63,14 @@ const todoComponent = (() =>
 				]
 			})
 
-			const titleInput = inputWrapper('Title', 'value', component('input', {
+			const titleInput = inputWrapper('Title', component('input', {
 				props: {
 					maxlength: 25,
 					value: todoInfo.title,
 				}
 			}));
 
-			const descInput = inputWrapper('Description', 'value', component('textarea', {
+			const descInput = inputWrapper('Description', component('textarea', {
 				props: {
 					class: [
 						'descTextArea',
@@ -78,10 +78,8 @@ const todoComponent = (() =>
 					],
 				},
 			}))
-			// Setting it in function doesn't work
-			descInput.elem.querySelector('textarea').value =  todoInfo.description;
 
-			const dateInput = inputWrapper('Due Date', 'valueAsDate', component('input', {
+			const dateInput = inputWrapper('Due Date', component('input', {
 				props: {
 					type: 'date',
 					valueAsDate: todoInfo.dueDate,
@@ -107,10 +105,13 @@ const todoComponent = (() =>
 					]
 				})
 
-				return inputWrapper('Priority', 'value', inputElem)
+				return inputWrapper('Priority', inputElem)
 			})()
+
 			// Setting it in function doesn't work
-			priorityInput.elem.querySelector('select').value =  todoInfo.priority;
+			descInput.elem.querySelector('textarea').value = todoInfo.description;
+			dateInput.elem.querySelector('input').valueAsDate = todoInfo.dueDate;
+			priorityInput.elem.querySelector('select').value = todoInfo.priority;
 			
 			const submitBtn = component('button', {
 				props: {

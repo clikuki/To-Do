@@ -75,13 +75,13 @@ const headerComponent = (() =>
 				]
 			})
 
-			const titleInput = inputWrapper('Title', 'value', component('input', {
+			const titleInput = inputWrapper('Title', component('input', {
 				props: {
 					maxlength: 25,
 				}
 			}));
 
-			const descInput = inputWrapper('Description', 'value', component('textarea', {
+			const descInput = inputWrapper('Description', component('textarea', {
 				props: {
 					class: [
 						'descTextArea',
@@ -90,7 +90,7 @@ const headerComponent = (() =>
 				},
 			}))
 
-			const dateInput = inputWrapper('Due Date', 'valueAsDate', component('input', {
+			const dateInput = inputWrapper('Due Date', component('input', {
 				props: {
 					type: 'date'
 				},
@@ -115,17 +115,17 @@ const headerComponent = (() =>
 					]
 				})
 
-				return inputWrapper('Priority', 'value', inputElem)
+				return inputWrapper('Priority', inputElem)
 			})()
 			
 			const submitBtn = component('button', {
 				props: {
 					id: 'todoSubmitBtn',
 					onclick: () => addTodo(projectElem, todosContainer, {
-						title: titleInput.val(),
-						description: descInput.val(),
-						dueDate: dateInput.val(),
-						priority: +priorityInput.val(),
+						title: titleInput.inputElem.value,
+						description: descInput.inputElem.value,
+						dueDate: dateInput.inputElem.valueAsDate,
+						priority: +priorityInput.inputElem.value,
 					}, key),
 				},
 				children: [

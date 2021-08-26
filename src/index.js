@@ -32,7 +32,7 @@ const addProject = (name) =>
 
 const getNodes = () =>
 {
-	const nameInput = inputWrapper('Project name', 'value', component('input', {
+	const nameInput = inputWrapper('Project name', component('input', {
 		props: {
 			type: 'text',
 			id: 'projectNameInput',
@@ -46,7 +46,7 @@ const getNodes = () =>
 	const submitBtn = component('button', {
 		props: {
 			id: 'projectSubmitBtn',
-			onclick: () => addProject(nameInput.val()),
+			onclick: () => addProject(nameInput.inputElem.value),
 		},
 		children: [
 			'Create'
