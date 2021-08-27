@@ -241,20 +241,25 @@ const headerComponent = (() =>
 			}
 		}
 
-		const removeElems = (elemArray) =>
+		const removeElems = (projectElem, todosContainer, elemArray) =>
 		{
 			for(const elem of elemArray)
 			{
 				elem.remove();
 			}
+
+			if(todosContainer.children.length === 0)
+			{
+				projectElem.classList.add('empty');
+			}
 		}
 		
-		return (todosContainer, projKey) =>
+		return (projectElem, todosContainer, projKey) =>
 		{
 			const [elemArray, keyArray] = getCompletedTodos(todosContainer);
 
 			removeFromStorage(projKey, keyArray);
-			removeElems(elemArray);
+			removeElems(projectElem, todosContainer, elemArray);
 			save();
 		}
 	})()
@@ -294,7 +299,7 @@ const headerComponent = (() =>
 
 		const clearCompleteTodosBtn = component('button', {
 			props: {
-				onclick: () => clearCompletedTodos(todosContainer, key),
+				onclick: () => clearCompletedTodos(projectElem, todosContainer, key),
 			},
 			children: [
 				'Clear completed To-Dos'

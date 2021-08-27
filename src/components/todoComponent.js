@@ -50,15 +50,22 @@ const todoComponent = (() =>
 			projObj.todos.remove(todoKey);
 		}
 
-		const removeFromDOM = (todoElem) =>
+		const removeFromDOM = (todoElem, projKey) =>
 		{
 			todoElem.remove();
+
+			const projectElem = document.querySelector(`[data-key='${projKey}']`)
+			const todosContainer = projectElem.querySelector(`.todos`)
+			if(todosContainer.children.length === 0)
+			{
+				projectElem.classList.add('empty');
+			}
 		}
 
 		return (todoElem, projKey, todoKey) =>
 		{
 			removeFromStorage(projKey, todoKey);
-			removeFromDOM(todoElem);
+			removeFromDOM(todoElem, projKey);
 			save();
 		}
 	})()
