@@ -287,7 +287,7 @@ const headerComponent = (() =>
 			]
 		})
 
-		const toggleTodosBtn = component('img', {
+		const toggleTodosArrow = component('img', {
 			props: {
 				src: arrow,
 				class: [
@@ -336,7 +336,7 @@ const headerComponent = (() =>
 			]
 		})
 
-		mainComponent.append(toggleTodosBtn, projectName, btnContainer)
+		mainComponent.append(toggleTodosArrow, projectName, btnContainer)
 		return mainComponent;
 	}
 })()

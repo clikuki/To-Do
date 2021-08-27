@@ -50,16 +50,28 @@ const todoComponent = (() =>
 			projObj.todos.remove(todoKey);
 		}
 
-		const removeFromDOM = (todoElem, projKey) =>
+		const getProjAndTodosContainer = (projKey) =>
 		{
-			todoElem.remove();
+			const projectElem = document.querySelector(`[data-key='${projKey}']`);
+			const todosContainer = projectElem.querySelector(`.todos`);
 
-			const projectElem = document.querySelector(`[data-key='${projKey}']`)
-			const todosContainer = projectElem.querySelector(`.todos`)
+			return [projectElem, todosContainer];
+		}
+
+		const todoEmptyCheck = (projKey) =>
+		{
+			const [projectElem, todosContainer] = getProjAndTodosContainer(projKey);
+
 			if(todosContainer.children.length === 0)
 			{
 				projectElem.classList.add('empty');
 			}
+		}
+
+		const removeFromDOM = (todoElem, projKey) =>
+		{
+			todoElem.remove();
+			todoEmptyCheck(projKey);
 		}
 
 		return (todoElem, projKey, todoKey) =>
@@ -93,12 +105,12 @@ const todoComponent = (() =>
 				projectElem.setAttribute('data-priority', todoInfo.priority);
 			}
 
-			return (projectElem, name, date, projKey, todoKey, newTodoInfo) =>
+			return (todoElem, nameElem, dateElem, projKey, todoKey, newTodoInfo) =>
 			{
 				try
 				{
 					editStorage(projKey, todoKey, newTodoInfo);	
-					editElem(projectElem, name, date, newTodoInfo);
+					editElem(todoElem, nameElem, dateElem, newTodoInfo);
 					save();
 					modal.hide();
 				}
@@ -113,7 +125,7 @@ const todoComponent = (() =>
 			}
 		})()
 
-		const getNodes = (projectElem, name, date, todoInfo, projKey, todoKey) =>
+		const getNodes = (todoElem, nameElem, dateElem, todoInfo, projKey, todoKey) =>
 		{
 			const nodeContainer = new DocumentFragment();
 		
@@ -182,7 +194,7 @@ const todoComponent = (() =>
 			const submitBtn = component('button', {
 				props: {
 					id: 'todoSubmitBtn',
-					onclick: () => editTodo(projectElem, name, date, projKey, todoKey, {
+					onclick: () => editTodo(todoElem, nameElem, dateElem, projKey, todoKey, {
 						title: titleInput.inputElem.value,
 						description: descInput.inputElem.value,
 						dueDate: dateInput.inputElem.valueAsDate,
@@ -250,9 +262,9 @@ const todoComponent = (() =>
 			return nodeContainer;
 		}
 
-		return (projectElem, name, date, todoInfo, projKey, todoKey) =>
+		return (todoElem, nameElem, dateElem, todoInfo, projKey, todoKey) =>
 		{
-			modal.show(getNodes(projectElem, name, date, todoInfo, projKey, todoKey));
+			modal.show(getNodes(todoElem, nameElem, dateElem, todoInfo, projKey, todoKey));
 		}
 	})()
 
