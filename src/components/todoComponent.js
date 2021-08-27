@@ -1,7 +1,7 @@
 import component from '../modules/component';
 import inputWrapper from './inputWrapper';
 import modal from '../modules/modal';
-import persistentSave from '../modules/persistentSave';
+import { save } from '../modules/persistentSave';
 import project from '../modules/projects';
 import edit from '../assets/edit_48x48.png';
 import remove from '../assets/delete_48x48.png';
@@ -29,7 +29,7 @@ const todoComponent = (() =>
 		{
 			editStorage(projKey, todoKey);
 			editElem(todoElem, statusDisplayElem);
-			persistentSave.save();
+			save();
 		}
 	})()
 	
@@ -59,7 +59,7 @@ const todoComponent = (() =>
 		{
 			removeFromStorage(projKey, todoKey);
 			removeFromDOM(todoElem);
-			persistentSave.save();
+			save();
 		}
 	})()
 
@@ -92,7 +92,7 @@ const todoComponent = (() =>
 				{
 					editStorage(projKey, todoKey, newTodoInfo);	
 					editElem(projectElem, name, date, newTodoInfo);
-					persistentSave.save();
+					save();
 					modal.hide();
 				}
 				catch (e)
@@ -267,7 +267,7 @@ const todoComponent = (() =>
 				],
 				onclick: (e) =>
 				{
-					if(e.target !== editBtn && e.target !== removeBtn)
+					if(![editBtn, removeBtn].includes(e.target))
 					{
 						toggleTodoState(mainComponent, status, projKey, todoKey)
 					}

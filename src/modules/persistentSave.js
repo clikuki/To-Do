@@ -4,17 +4,14 @@ import todoComponent from '../components/todoComponent';
 
 const key = 'projectsArray';
 
-// For testing
-window.get = () => localStorage.getItem(key);
-window.del = () => localStorage.removeItem(key);
-window.project = project;
-
-const load = (projectContainer) =>
+export const load = (projectContainer) =>
 {
 	const projArray = JSON.parse(localStorage.getItem(key));
 
 	if(projArray)
 	{
+		const nodeContainer = new DocumentFragment();
+
 		for(const projItem of projArray)
 		{
 			const projObj = project.add(projItem.name);
@@ -25,13 +22,9 @@ const load = (projectContainer) =>
 				projElem.classList.remove('empty');
 
 				const todosContainer = projElem.querySelector('.todos');
-
-				for(let todoInfo of projItem.todos)
+				for(const todoInfo of projItem.todos)
 				{
-					todoInfo = {
-						...todoInfo,
-						dueDate: new Date(todoInfo.dueDate),
-					}
+					todoInfo.dueDate = new Date(todoInfo.dueDate);
 
 					const todoKey = projObj.todos.add(todoInfo).key;
 					const todoElem = todoComponent(todoInfo, projObj.key, todoKey);
@@ -39,30 +32,25 @@ const load = (projectContainer) =>
 				}
 			}
 
-			projectContainer.append(projElem);
+			nodeContainer.append(projElem);
 		}
+
+		projectContainer.append(nodeContainer);
 	}
 }
 
-const save = () =>
+export const save = () =>
 {
 	const projArray = project.get().map(projectItem => ({
-			name: projectItem.projectName,
-			todos: projectItem.todos.get().map(todoItem => ({
-				completed: todoItem.completed,
-				title: todoItem.title,
-				description: todoItem.description,
-				dueDate: todoItem.dueDate,
-				priority: todoItem.priority,
-			})),
-		}));
+		name: projectItem.projectName,
+		todos: projectItem.todos.get().map(todoItem => ({
+			completed: todoItem.completed,
+			title: todoItem.title,
+			description: todoItem.description,
+			dueDate: todoItem.dueDate,
+			priority: todoItem.priority,
+		})),
+	}));
 
 	localStorage.setItem(key, JSON.stringify(projArray));
 }
-
-const methods = {
-	load,
-	save,
-}
-
-export default methods;

@@ -1,14 +1,14 @@
 import project from './modules/projects';
-import persistentSave from './modules/persistentSave';
 import projectComponent from './components/projectComponent';
 import component from './modules/component';
 import modal from './modules/modal';
 import inputWrapper from './components/inputWrapper';
+import * as persist from './modules/persistentSave';
 import './normalize.css';
 import './style.css';
 
 const projectContainer = document.querySelector('#projectContainer');
-persistentSave.load(projectContainer);
+persist.load(projectContainer);
 
 const addProject = (name) =>
 {
@@ -20,7 +20,7 @@ const addProject = (name) =>
 		// Append element to projectContainer
 		const projectElem = projectComponent(name, projectKey);
 		projectContainer.append(projectElem);
-		persistentSave.save();
+		persist.save();
 		modal.hide();
 	}
 	catch (e)
