@@ -10,10 +10,12 @@ import remove from '../assets/delete_48x48.png';
 
 const headerComponent = (() =>
 {
-	const toggleTodoList = (projectElem, addTodoBtn, clickedElem) =>
+	const toggleTodoList = (projectElem, btnContainer, clickedElem) =>
 	{
-		if (clickedElem === addTodoBtn) return;
-		projectElem.classList.toggle('active');
+		if (clickedElem.parentElement !== btnContainer)
+		{
+			projectElem.classList.toggle('active');
+		}
 	}
 
 	const addTodoCB = (() =>
@@ -219,11 +221,49 @@ const headerComponent = (() =>
 		}
 	})()
 
+	const clearCompletedTodos = (() =>
+	{
+		const getCompletedTodos = (todosContainer) =>
+		{
+			const elemArray = [...todosContainer.querySelectorAll('.completed')];
+			const keyArray = elemArray.map(elem =>  elem.getAttribute('data-key'));
+
+			return [elemArray, keyArray];
+		}
+
+		const removeFromStorage = (projKey, todoKeys) =>
+		{
+			const projObj = project.get(projKey);
+
+			for(const key of todoKeys)
+			{
+				projObj.todos.remove(key);
+			}
+		}
+
+		const removeElems = (elemArray) =>
+		{
+			for(const elem of elemArray)
+			{
+				elem.remove();
+			}
+		}
+		
+		return (todosContainer, projKey) =>
+		{
+			const [elemArray, keyArray] = getCompletedTodos(todosContainer);
+
+			removeFromStorage(projKey, keyArray);
+			removeElems(elemArray);
+			save();
+		}
+	})()
+
 	return (name, projectElem, key, todosContainer) =>
 	{
 		const mainComponent = component('div', {
 			props: {
-				onclick: (e) => toggleTodoList(projectElem, addTodoBtn, e.target),
+				onclick: (e) => toggleTodoList(projectElem, btnContainer, e.target),
 				class: [
 					'projectHeader',
 					'heading',
@@ -252,9 +292,19 @@ const headerComponent = (() =>
 			}
 		})
 
+		const clearCompleteTodosBtn = component('button', {
+			props: {
+				onclick: () => clearCompletedTodos(todosContainer, key),
+			},
+			children: [
+				'Clear completed To-Dos'
+			],
+		})
+
 		const removeProjectBtn = component('img', {
 			props: {
 				src: remove,
+				title: 'Remove project',
 				onclick: () => removeProject(projectElem, key),
 			}
 		})
@@ -262,11 +312,26 @@ const headerComponent = (() =>
 		const addTodoBtn = component('img', {
 			props: {
 				src: add,
+				title: 'Add a todo',
 				onclick: () => addTodoCB(projectElem, todosContainer, key),
 			},
 		})
 
-		mainComponent.append(toggleTodosBtn, projectName, removeProjectBtn, addTodoBtn)
+		const btnContainer = component('div', {
+			props: {
+				class: [
+					'projectBtns',
+					'centerDiv',
+				]
+			},
+			children: [
+				clearCompleteTodosBtn,
+				removeProjectBtn,
+				addTodoBtn,
+			]
+		})
+
+		mainComponent.append(toggleTodosBtn, projectName, btnContainer)
 		return mainComponent;
 	}
 })()

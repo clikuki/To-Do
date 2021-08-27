@@ -330,7 +330,7 @@ const todoComponent = (() =>
 			children: [
 				removeBtn,
 				editBtn,
-			]
+			],
 		})
 	
 		mainComponent.append( name, status, date, btnContainer );
